@@ -1,6 +1,6 @@
 class ScatterPlot {
 
-    constructor(_config, _data) {
+    constructor(_config, _data, _attributes) {
         this.config = {
             parentElement: _config.parentElement,
             containerWidth: _config.containerWidth || 500,
@@ -10,7 +10,7 @@ class ScatterPlot {
 
         this.data = _data;
         this.active = d3.select(null);
-
+        this.attributes = _attributes;
         // Call a class function
         this.initVis();
     }
@@ -20,7 +20,6 @@ class ScatterPlot {
         console.log(this.data);
 
         let vis = this;
-        let data = this.data.objects.counties.geometries;
 
         // Calculate inner chart size. Margin specifies the space around the actual chart.
         vis.width = vis.config.containerWidth - vis.config.margin.left - vis.config.margin.right;
@@ -33,11 +32,11 @@ class ScatterPlot {
             .attr('height', vis.config.containerHeight);
 
         vis.xScale = d3.scaleLinear()
-            .domain([d3.min(data, d => d.properties.median_household_income), d3.max(data, d => d.properties.median_household_income)])
+            .domain([d3.min(this.data, d => d.properties[this.attributes[0]]), d3.max(this.data, d => d.properties[this.attributes[0]])])
             .range([0, vis.width]);
 
         vis.yScale = d3.scaleLinear()
-            .domain([0, d3.max(data, d => d.properties.air_quality) + d3.max(data, d => d.properties.air_quality) * .1])
+            .domain([0, d3.max(this.data, d => d.properties[this.attributes[1]]) + d3.max(this.data, d => d.properties[this.attributes[1]]) * .1])
             .range([vis.height, 0]);
 
         vis.chart = vis.svg.append('g')
@@ -46,14 +45,14 @@ class ScatterPlot {
 
         vis.chart.append('g')
             .selectAll("dot")
-            .data(data)
+            .data(this.data)
             .enter()
             .append("circle")
-            .attr("cx", d => vis.xScale(d.properties.median_household_income))
-            .attr("cy", d => vis.yScale(d.properties.air_quality))
+            .attr("cx", d => vis.xScale(d.properties[this.attributes[0]]))
+            .attr("cy", d => vis.yScale(d.properties[this.attributes[1]]))
             .attr("r", 2)
             .attr('fill', d => {
-                if (d.properties.median_household_income) {
+                if (d.properties[this.attributes[0]]) {
                     return '#aa0011';
                 } else {
                     return 'url(#lightstripe)';
@@ -85,7 +84,7 @@ class ScatterPlot {
             .attr("text-anchor", "end")
             .attr("x", vis.width / 2)
             .attr("y", vis.height + vis.config.margin.top + 40)
-            .text('Median Household Income ($)');
+            .text(this.attributes[0]);
 
         // Y axis label:
         vis.svg.append("text")
@@ -94,7 +93,7 @@ class ScatterPlot {
             .attr("y", 0)
             .attr("x", 0 - (vis.height / 2))
             .attr("dy", "1em")
-            .text('Air Quality Index');
+            .text(this.attributes[1]);
 
         this.updateVis(); //leave this empty for now...
     }
