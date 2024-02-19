@@ -48,10 +48,20 @@
   font-weight: 600;
 }
 .info {
-    padding: 14px;
+    padding: 20px;
+    margin: 5px;
+    font: 12px/14px Arial, sans-serif;
+    border: #000 1px solid;
+    max-width: 200px;
+}
+.window {
+    padding: 20px;
+    margin: 5px;
+    border: #000 1px solid;
+    max-width: 900px;
 }
 
-.grid-container{
+.grid-container-old{
     margin: 20px auto;
     width: auto;
     height: auto;
@@ -63,12 +73,10 @@
     .window {
         padding: 20px;
         margin: 5px;
-        padding:20px;
         display:flex;
         align-items:center;
         justify-content:center;
     }
-
 }
   
 * {

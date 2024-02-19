@@ -36,9 +36,9 @@ class ScatterPlot {
             .attr("y", 0)
             .attr("height", vis.config.containerHeight)
             .attr("width", vis.config.containerWidth)
-            .style("stroke", "#000000")
+            .style("stroke", "#999999")
             .style("fill", "none")
-            .style("stroke-width", "2");
+            .style("stroke-width", "1");
 
         vis.xScale = d3.scaleLinear()
             .domain([d3.min(this.data, d => d.properties[this.attributes[0]]), d3.max(this.data, d => d.properties[this.attributes[0]])])
@@ -90,17 +90,16 @@ class ScatterPlot {
 
         // Add X axis label:
         vis.chart.append("text")
-            .attr("text-anchor", "end")
-            .attr("x", vis.width / 2)
-            .attr("y", vis.height + (vis.config.margin.top + 30))
+            .attr("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .attr("transform", `translate(${vis.width / 2}, ${vis.height + vis.config.margin.top + 25})`)
             .text(this.attributes[0]);
 
         // Y axis label:
         vis.chart.append("text")
-            .attr("text-anchor", "end")
-            .attr("transform", "rotate(-90)")
-            .attr("y", -vis.config.margin.left + 2)
-            .attr("x", 0 - (vis.height / 2))
+            .attr("text-anchor", "middle")
+            .attr("font-size", "12px")
+            .attr("transform", `translate(${-vis.config.margin.left + 5}, ${vis.height / 2}) rotate(-90)`)
             .attr("dy", "1em")
             .text(this.attributes[1]);
 

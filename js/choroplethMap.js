@@ -54,9 +54,9 @@ class ChoroplethMap {
       .attr("y", 0)
       .attr("height", vis.config.containerHeight)
       .attr("width", vis.config.containerWidth)
-      .style("stroke", "#000000")
+      .style("stroke", "#999999")
       .style("fill", "none")
-      .style("stroke-width", "2");
+      .style("stroke-width", "1");
 
     vis.projection = d3.geoAlbersUsa()
       .translate([vis.width / 2, vis.height / 2])
@@ -102,7 +102,7 @@ class ChoroplethMap {
         const airQuality = d.properties.air_quality ? `<strong>${d.properties.air_quality}</strong> air quality index` : 'No air quality data available';
         d3.select('.tooltip')
           .style('display', 'block')
-          .style('left', (vis.config.margin.left + vis.config.tooltipPadding) + 'px')
+          .style('left', (vis.config.tooltipPadding) + 'px')
           .style('top', (event.pageY) + 'px')
           .html(`
                         <div class="tooltip-title">${d.properties.name} County</div>
