@@ -31,18 +31,20 @@ class ScatterPlot {
             .attr('width', vis.config.containerWidth)
             .attr('height', vis.config.containerHeight);
 
+        console.log(d3.min(this.data, d => d.properties[this.attributes[1]]));
+
         vis.xScale = d3.scaleLinear()
             .domain([d3.min(this.data, d => d.properties[this.attributes[0]]), d3.max(this.data, d => d.properties[this.attributes[0]])])
             .range([0, vis.width]);
 
         vis.yScale = d3.scaleLinear()
-            .domain([0, d3.max(this.data, d => d.properties[this.attributes[1]]) + d3.max(this.data, d => d.properties[this.attributes[1]]) * .1])
+            .domain([d3.min(this.data, d => d.properties[this.attributes[1]]), d3.max(this.data, d => d.properties[this.attributes[1]])])
             .range([vis.height, 0]);
 
         vis.chart = vis.svg.append('g')
             .attr('transform', `translate(${vis.config.margin.left}, ${vis.config.margin.top})`);
 
-
+        // translate these betters
         vis.chart.append('g')
             .selectAll("dot")
             .data(this.data)
@@ -52,7 +54,7 @@ class ScatterPlot {
             .attr("cy", d => vis.yScale(d.properties[this.attributes[1]]))
             .attr("r", 2)
             .attr('fill', d => {
-                if (d.properties[this.attributes[0]]) {
+                if (!isNaN(d.properties[this.attributes[0]]) && !isNaN(d.properties[this.attributes[1]])) {
                     return '#aa0011';
                 } else {
                     return 'url(#lightstripe)';
@@ -80,17 +82,17 @@ class ScatterPlot {
             .call(vis.yAxis);
 
         // Add X axis label:
-        vis.svg.append("text")
+        vis.chart.append("text")
             .attr("text-anchor", "end")
             .attr("x", vis.width / 2)
-            .attr("y", vis.height + vis.config.margin.top + 40)
+            .attr("y", vis.height + (vis.config.margin.top + 20))
             .text(this.attributes[0]);
 
         // Y axis label:
-        vis.svg.append("text")
+        vis.chart.append("text")
             .attr("text-anchor", "end")
             .attr("transform", "rotate(-90)")
-            .attr("y", 0)
+            .attr("y", -vis.config.margin.left)
             .attr("x", 0 - (vis.height / 2))
             .attr("dy", "1em")
             .text(this.attributes[1]);

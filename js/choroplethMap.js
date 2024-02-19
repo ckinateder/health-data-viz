@@ -49,6 +49,14 @@ class ChoroplethMap {
       .attr('width', vis.config.containerHeight) //width + margin.left + margin.right)
       .on('click', vis.clicked);
 
+    var borderPath = vis.svg.append("rect")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("height", vis.height)
+      .attr("width", vis.width)
+      .style("stroke", "#000000")
+      .style("fill", "none")
+      .style("stroke-width", "2");
 
     vis.projection = d3.geoAlbersUsa()
       .translate([vis.width / 2, vis.height / 2])

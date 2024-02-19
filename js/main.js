@@ -53,7 +53,7 @@ Promise.all([
 
   let attributes = [
     "median_household_income",
-    "percent_stroke",
+    "air_quality",
   ];
 
   const scatterplot = new ScatterPlot({
@@ -61,5 +61,17 @@ Promise.all([
     'containerWidth': 1000,
     'containerHeight': 400,
   }, countyData, attributes);
+
+  const histogram1 = new Histogram({
+    parentElement: '.histogram1',
+    'containerWidth': 1000,
+    'containerHeight': 400,
+  }, countyData, attributes[0]);
+
+  const histogram2 = new Histogram({
+    parentElement: '.histogram1',
+    'containerWidth': 1000,
+    'containerHeight': 400,
+  }, countyData, attributes[1]);
 
 }).catch(error => console.error(error));
