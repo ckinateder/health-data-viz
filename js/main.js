@@ -44,34 +44,33 @@ Promise.all([
 
   const countyData = geoData.objects.counties.geometries;
 
-  const choroplethMap = new ChoroplethMap({
-    parentElement: '.viz',
-    'containerWidth': 1000,
-    'containerHeight': 650,
-  }, geoData);
-
-
   let attributes = [
     "median_household_income",
     "air_quality",
   ];
 
+  const choroplethMap = new ChoroplethMap({
+    parentElement: '.choropleth',
+    'containerWidth': 900,
+    'containerHeight': 500,
+  }, geoData);
+
   const scatterplot = new ScatterPlot({
     parentElement: '.scatterplot',
-    'containerWidth': 1000,
-    'containerHeight': 400,
+    'containerWidth': 900,
+    'containerHeight': 500,
   }, countyData, attributes);
 
   const histogram1 = new Histogram({
     parentElement: '.histogram1',
-    'containerWidth': 1000,
-    'containerHeight': 400,
+    'containerWidth': 900,
+    'containerHeight': 500,
   }, countyData, attributes[0]);
 
   const histogram2 = new Histogram({
-    parentElement: '.histogram1',
-    'containerWidth': 1000,
-    'containerHeight': 400,
+    parentElement: '.histogram2',
+    'containerWidth': 900,
+    'containerHeight': 500,
   }, countyData, attributes[1]);
 
 }).catch(error => console.error(error));

@@ -10,7 +10,7 @@ class ChoroplethMap {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 1000,
       containerHeight: _config.containerHeight || 650,
-      margin: _config.margin || { top: 10, right: 10, bottom: 10, left: 10 },
+      margin: _config.margin || { top: 20, right: 20, bottom: 20, left: 20 },
       tooltipPadding: 10,
       legendBottom: 50,
       legendLeft: 50,
@@ -52,8 +52,8 @@ class ChoroplethMap {
     var borderPath = vis.svg.append("rect")
       .attr("x", 0)
       .attr("y", 0)
-      .attr("height", vis.height)
-      .attr("width", vis.width)
+      .attr("height", vis.config.containerHeight)
+      .attr("width", vis.config.containerWidth)
       .style("stroke", "#000000")
       .style("fill", "none")
       .style("stroke-width", "2");
@@ -102,8 +102,8 @@ class ChoroplethMap {
         const airQuality = d.properties.air_quality ? `<strong>${d.properties.air_quality}</strong> air quality index` : 'No air quality data available';
         d3.select('.tooltip')
           .style('display', 'block')
-          .style('left', (event.pageX + vis.config.tooltipPadding) + 'px')
-          .style('top', (event.pageY + vis.config.tooltipPadding) + 'px')
+          .style('left', (vis.config.margin.left + vis.config.tooltipPadding) + 'px')
+          .style('top', (event.pageY) + 'px')
           .html(`
                         <div class="tooltip-title">${d.properties.name} County</div>
                         <div>${medianHouseholdIncome}</div>

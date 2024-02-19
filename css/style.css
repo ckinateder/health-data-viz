@@ -1,6 +1,6 @@
 .background {
-            fill: none;
-            pointer-events: all;
+    fill: none;
+    pointer-events: all;
 }
 
 #states {
@@ -39,7 +39,7 @@
   font-size: 12px;
   font-weight: 500;
   padding: 8px;
-  min-width: 160px;
+  min-width: 120px;
   color: #333;
 }
 .tooltip-title {
@@ -50,6 +50,27 @@
 .info {
     padding: 14px;
 }
-.window {
-    border: solid 1px #ccc;
+
+.grid-container{
+    margin: 20px auto;
+    width: auto;
+    height: auto;
+    display:grid;
+    grid-template-columns: auto auto;
+    grid-row: auto auto;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+    .window {
+        padding: 20px;
+        margin: 5px;
+        padding:20px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+
+}
+  
+* {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
