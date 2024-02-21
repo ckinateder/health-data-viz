@@ -63,7 +63,7 @@ class ChoroplethMap {
       .scale(vis.width);
 
     vis.colorScale = d3.scaleLinear()
-      .domain(d3.extent(vis.data.objects.counties.geometries, d => d.properties.median_household_income))
+      .domain(d3.extent(vis.data.objects.counties.geometries, d => d.properties[this.attributes[0]]))
       .range(['#dfe2f2', '#0d003b'])
       .interpolate(d3.interpolateHcl);
 
@@ -85,32 +85,54 @@ class ChoroplethMap {
       .attr("d", vis.path)
       // .attr("class", "county-boundary")
       .attr('fill', d => {
-        if (d.properties.median_household_income) {
-          return vis.colorScale(d.properties.median_household_income);
+        if (d.properties[this.attributes[0]]) {
+          return vis.colorScale(d.properties[this.attributes[0]]);
         } else {
           return 'url(#lightstripe)';
         }
       });
 
+    /**
+  vis.counties
+    .on('mousemove', (d, event) => {
+      const popDensity = d.properties.pop ? `<strong>${d.properties.pop}</strong> pop. density per km<sup>2</sup>` : 'No pop data available';
+      const medianHouseholdIncome = d.properties.median_household_income ? `<strong>$${d.properties.median_household_income}</strong> median household income` : 'No income data available';
+      const percentStroke = d.properties.percent_stroke ? `<strong>${d.properties.percent_stroke}%</strong> of people have had a stroke` : 'No stroke data available';
+      const airQuality = d.properties.air_quality ? `<strong>${d.properties.air_quality}</strong> air quality index` : 'No air quality data available';
+      d3.select('.tooltip')
+        .style('display', 'block')
+        .style('left', `${d3.event.pageX + vis.config.tooltipPadding}px`)
+        .style('top', `${d3.event.pageY + vis.config.tooltipPadding}px`)
+        .html(`
+                      <div class="tooltip-title">${d.properties.name} County</div>
+                      <div>${medianHouseholdIncome}</div>
+                      <div>${percentStroke}</div>
+                      <div>${airQuality}</div>  
+                    `);
+    })
+    .on('mouseleave', () => {
+      d3.select('.tooltip').style('display', 'none');
+    }); */
+
+
     vis.counties
       .on('mousemove', (d, event) => {
-        const popDensity = d.properties.pop ? `<strong>${d.properties.pop}</strong> pop. density per km<sup>2</sup>` : 'No pop data available';
-        const medianHouseholdIncome = d.properties.median_household_income ? `<strong>$${d.properties.median_household_income}</strong> median household income` : 'No income data available';
-        const percentStroke = d.properties.percent_stroke ? `<strong>${d.properties.percent_stroke}%</strong> of people have had a stroke` : 'No stroke data available';
-        const airQuality = d.properties.air_quality ? `<strong>${d.properties.air_quality}</strong> air quality index` : 'No air quality data available';
-        d3.select('.tooltip')
+        const a1 = d.properties[this.attributes[0]] ? `<strong>${d.properties[this.attributes[0]]}</strong> ${this.attributes[0]}` : 'No data available';
+        const a2 = d.properties[this.attributes[1]] ? `<strong>${d.properties[this.attributes[1]]}</strong> ${this.attributes[1]}` : 'No data available';
+
+        d3.select('#tooltip-choropleth')
           .style('display', 'block')
           .style('left', `${d3.event.pageX + vis.config.tooltipPadding}px`)
           .style('top', `${d3.event.pageY + vis.config.tooltipPadding}px`)
           .html(`
                         <div class="tooltip-title">${d.properties.name} County</div>
-                        <div>${medianHouseholdIncome}</div>
-                        <div>${percentStroke}</div>
-                        <div>${airQuality}</div>  
+                        <div>${a1}</div>
+                        <div>${a2}</div>
                       `);
+
       })
       .on('mouseleave', () => {
-        d3.select('.tooltip').style('display', 'none');
+        d3.select('#tooltip-choropleth').style('display', 'none');
       });
 
 
