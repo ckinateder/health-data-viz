@@ -5,7 +5,7 @@ class ChoroplethMap {
    * @param {Object}
    * @param {Array}
    */
-  constructor(_config, _data) {
+  constructor(_config, _data, _attributes) {
     this.config = {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 1000,
@@ -19,7 +19,7 @@ class ChoroplethMap {
     }
     this.data = _data;
     // this.config = _config;
-
+    this.attributes = _attributes;
     this.us = _data;
 
     this.active = d3.select(null);
@@ -94,16 +94,14 @@ class ChoroplethMap {
 
     vis.counties
       .on('mousemove', (d, event) => {
-        //console.log(d);
-        //console.log(event);
         const popDensity = d.properties.pop ? `<strong>${d.properties.pop}</strong> pop. density per km<sup>2</sup>` : 'No pop data available';
         const medianHouseholdIncome = d.properties.median_household_income ? `<strong>$${d.properties.median_household_income}</strong> median household income` : 'No income data available';
         const percentStroke = d.properties.percent_stroke ? `<strong>${d.properties.percent_stroke}%</strong> of people have had a stroke` : 'No stroke data available';
         const airQuality = d.properties.air_quality ? `<strong>${d.properties.air_quality}</strong> air quality index` : 'No air quality data available';
         d3.select('.tooltip')
           .style('display', 'block')
-          .style('left', (vis.config.tooltipPadding) + 'px')
-          .style('top', (event.pageY) + 'px')
+          .style('left', `${d3.event.pageX + vis.config.tooltipPadding}px`)
+          .style('top', `${d3.event.pageY + vis.config.tooltipPadding}px`)
           .html(`
                         <div class="tooltip-title">${d.properties.name} County</div>
                         <div>${medianHouseholdIncome}</div>

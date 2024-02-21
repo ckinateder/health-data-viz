@@ -48,12 +48,13 @@ Promise.all([
     "median_household_income",
     "air_quality",
   ];
+  console.log(attributes);
 
   const choroplethMap = new ChoroplethMap({
     parentElement: '.choropleth',
     'containerWidth': 900,
     'containerHeight': 500,
-  }, geoData);
+  }, geoData, attributes);
 
   const scatterplot = new ScatterPlot({
     parentElement: '.scatterplot',
