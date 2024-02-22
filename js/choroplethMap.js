@@ -51,11 +51,6 @@ class ChoroplethMap {
       .attr("width", vis.config.containerWidth)
       .attr("height", vis.config.containerHeight);
 
-    this.updateVis();
-  }
-  updateVis() {
-    let vis = this;
-
     vis.svg
       .append("rect")
       .attr("class", "background center-container")
@@ -117,15 +112,42 @@ class ChoroplethMap {
       .selectAll("path")
       .data(topojson.feature(vis.us, vis.us.objects.counties).features)
       .join("path")
-      .attr("d", vis.path)
-      //.attr("class", "county-boundary")
-      .attr("fill", (d) => {
-        if (d.properties[this.attributeLabels[0]]) {
-          return vis.colorScale(d.properties[this.attributeLabels[0]]);
-        } else {
-          return "url(#lightstripe)";
-        }
-      });
+      .attr("d", vis.path);
+
+    vis.states = vis.g
+      .append("path")
+      .datum(
+        topojson.mesh(vis.us, vis.us.objects.states, function (a, b) {
+          return a !== b;
+        })
+      )
+      .attr("id", "state-borders")
+      .attr("d", vis.path);
+
+    this.updateVis();
+  }
+  updateVis() {
+    let vis = this;
+
+    vis.colorScale = d3
+      .scaleLinear()
+      .domain(
+        d3.extent(
+          vis.data.objects.counties.geometries,
+          (d) => d.properties[this.attributeLabels[0]]
+        )
+      )
+      .range(["#dfe2f2", "#0d003b"])
+      .interpolate(d3.interpolateHcl);
+
+    //.attr("class", "county-boundary")
+    vis.counties.attr("fill", (d) => {
+      if (d.properties[this.attributeLabels[0]]) {
+        return vis.colorScale(d.properties[this.attributeLabels[0]]);
+      } else {
+        return "url(#lightstripe)";
+      }
+    });
 
     vis.counties
       .on("mousemove", (event, d) => {
@@ -162,16 +184,6 @@ class ChoroplethMap {
           }
         });
       });
-
-    vis.g
-      .append("path")
-      .datum(
-        topojson.mesh(vis.us, vis.us.objects.states, function (a, b) {
-          return a !== b;
-        })
-      )
-      .attr("id", "state-borders")
-      .attr("d", vis.path);
 
     this.renderVis();
   }
