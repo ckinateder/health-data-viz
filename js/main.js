@@ -69,7 +69,7 @@ Promise.all([
     const labels = Object.keys(
       allData.objects.counties.geometries[0].properties
     ).filter((item) => {
-      return item !== "name";
+      return item !== "name" && item !== "urban_rural_status";
     });
 
     // add categories to the attribute select dropdown

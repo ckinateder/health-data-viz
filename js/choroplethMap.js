@@ -140,7 +140,6 @@ class ChoroplethMap {
       .range(["#dfe2f2", "#0d003b"])
       .interpolate(d3.interpolateHcl);
 
-    //.attr("class", "county-boundary")
     vis.counties.attr("fill", (d) => {
       if (d.properties[this.attributeLabels[0]]) {
         return vis.colorScale(d.properties[this.attributeLabels[0]]);

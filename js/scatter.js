@@ -120,7 +120,7 @@ class ScatterPlot {
           .style("display", "block")
           .style("left", `${x + vis.config.tooltipPadding}px`)
           .style("top", `${y + vis.config.tooltipPadding}px`).html(`
-                              <div class="tooltip-title">${a3} County</div>
+                              <div class="tooltip-title">${a3}</div>
                               <div>${a1}</div>
                               <div>${a2}</div>
                             `);
