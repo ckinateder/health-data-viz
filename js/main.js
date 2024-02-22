@@ -2,7 +2,7 @@
  * Load TopoJSON data of the world and the data of the world wonders
  */
 
-let allData, chloropleth, scatterplot, histogram1, histogram2;
+let allData, chloropleth, scatterplot, histogram1, histogram2, attributeLabels;
 
 Promise.all([
   d3.json("data/counties-10m.json"),
@@ -10,12 +10,12 @@ Promise.all([
   d3.csv("data/national_health_data.csv"),
 ])
   .then((data) => {
-    const geoData = data[0];
+    allData = data[0];
     const countyPopulationData = data[1];
     const nationalHealthData = data[2];
 
     // Combine both datasets by adding the population density to the TopoJSON file
-    geoData.objects.counties.geometries.forEach((d) => {
+    allData.objects.counties.geometries.forEach((d) => {
       for (let i = 0; i < countyPopulationData.length; i++) {
         if (d.id === countyPopulationData[i].cnty_fips) {
           d.properties.population = +countyPopulationData[i].Value;
@@ -60,62 +60,38 @@ Promise.all([
      * Data that doesnt work:
      * urban_rural_status
      *
+     */ /**
+     * attributeLabels = [label1, label2]
+     * attributeValues = [value1Array, value2Array]
+     * pass both to the scatterplot, hist, and choropleth
      */
+
+    const labels = Object.keys(
+      allData.objects.counties.geometries[0].properties
+    ).filter((item) => {
+      return item !== "name";
+    });
 
     // add categories to the attribute select dropdown
     d3.select("#attribute-1-select")
       .selectAll("option")
-      .data(Object.keys(geoData.objects.counties.geometries[0].properties))
+      .data(labels)
       .enter()
       .append("option")
       .text((d) => d);
     d3.select("#attribute-2-select")
       .selectAll("option")
-      .data(Object.keys(geoData.objects.counties.geometries[0].properties))
+      .data(labels)
       .enter()
       .append("option")
       .text((d) => d);
-    // swap the attributes with swap button
-    d3.select("#swap-btn").on("click", () => {
-      let attribute1 = d3.select("#attribute-1-select").property("value");
-      let attribute2 = d3.select("#attribute-2-select").property("value");
-      d3.select("#attribute-1-select").property("value", attribute2);
-      d3.select("#attribute-2-select").property("value", attribute1);
-    });
 
-    console.log(geoData);
-    allData = geoData;
-    let attributes = [
+    attributeLabels = [
       "median_household_income",
       "percent_coronary_heart_disease",
     ];
-
-    /**
-    geoData.objects.counties.geometries = cleanData(
-      geoData.objects.counties.geometries,
-      attributes
-    );
-    */
-
-    /**
-     * Rewrite the data to only include the attributes we want to use, use buttons
-     * to switch between the attributes, add dropdown to select the 2 attributes
-     * Maybe pass two arrays of data to the scatterplot and choroplethmap
-     */
-
-    let panelWidth =
-      (window.innerWidth ||
-        document.documentElement.clientWidth ||
-        document.body.clientWidth) / 2;
-    let panelHeight =
-      (window.innerHeight ||
-        document.documentElement.clientHeight ||
-        document.body.clientHeight) / 2.52;
-
-    console.log(panelWidth, panelHeight);
-
-    panelWidth = 900;
-    panelHeight = 500;
+    const panelWidth = 900;
+    const panelHeight = 500;
 
     // colored by first attribute
     choroplethMap = new ChoroplethMap(
@@ -126,7 +102,7 @@ Promise.all([
         tooltipTag: "#tooltip-choropleth",
       },
       allData,
-      attributes
+      attributeLabels
     );
 
     scatterplot = new ScatterPlot(
@@ -137,7 +113,7 @@ Promise.all([
         tooltipTag: "#tooltip-scatter",
       },
       allData,
-      attributes
+      attributeLabels
     );
 
     histogram1 = new Histogram(
@@ -148,7 +124,7 @@ Promise.all([
         tooltipTag: "#tooltip-hist-1",
       },
       allData,
-      attributes[0]
+      attributeLabels[0]
     );
 
     histogram2 = new Histogram(
@@ -159,7 +135,24 @@ Promise.all([
         tooltipTag: "#tooltip-hist-2",
       },
       allData,
-      attributes[1]
+      attributeLabels[1]
     );
   })
   .catch((error) => console.error(error));
+
+// swap the attributes with swap button
+d3.select("#swap-btn").on("click", () => {
+  let attribute1 = d3.select("#attribute-1-select").property("value");
+  let attribute2 = d3.select("#attribute-2-select").property("value");
+  d3.select("#attribute-1-select").property("value", attribute2);
+  d3.select("#attribute-2-select").property("value", attribute1);
+});
+d3.select("#update-btn").on("click", () => {
+  let attribute1Label = d3.select("#attribute-1-select").property("value");
+  let attribute2Label = d3.select("#attribute-2-select").property("value");
+
+  attributeLabels = [attribute1Label, attribute2Label];
+
+  scatterplot.setAttributeLabels(attributeLabels);
+  scatterplot.updateVis();
+});

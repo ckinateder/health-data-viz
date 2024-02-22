@@ -1,5 +1,5 @@
 class ScatterPlot {
-  constructor(_config, _data, _attributes) {
+  constructor(_config, _data, _attributeLabels) {
     this.config = {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 500,
@@ -11,10 +11,11 @@ class ScatterPlot {
     };
 
     this.data = _data.objects.counties.geometries;
-    this.data = cleanData(this.data, _attributes); // clean
+    this.data = cleanData(this.data, _attributeLabels); // clean
 
     this.active = d3.select(null);
-    this.attributes = _attributes;
+    this.attributeLabels = _attributeLabels; // array of 2 attributes
+
     // Call a class function
     this.initVis();
   }
@@ -50,19 +51,29 @@ class ScatterPlot {
       .style("fill", "none")
       .style("stroke-width", "1");
 
+    this.updateVis(); //leave this empty for now...
+  }
+
+  //  //leave this empty for now
+  updateVis() {
+    let vis = this;
+
+    // clear the svg
+    vis.svg.selectAll("*").remove();
+
     vis.xScale = d3
       .scaleLinear()
       .domain([
-        d3.min(this.data, (d) => d.properties[this.attributes[0]]),
-        d3.max(this.data, (d) => d.properties[this.attributes[0]]),
+        d3.min(this.data, (d) => d.properties[this.attributeLabels[0]]),
+        d3.max(this.data, (d) => d.properties[this.attributeLabels[0]]),
       ])
       .range([0, vis.width]);
 
     vis.yScale = d3
       .scaleLinear()
       .domain([
-        d3.min(this.data, (d) => d.properties[this.attributes[1]]),
-        d3.max(this.data, (d) => d.properties[this.attributes[1]]),
+        d3.min(this.data, (d) => d.properties[this.attributeLabels[1]]),
+        d3.max(this.data, (d) => d.properties[this.attributeLabels[1]]),
       ])
       .range([vis.height, 0]);
 
@@ -79,22 +90,22 @@ class ScatterPlot {
       .selectAll("dot")
       .data(this.data)
       .join("circle")
-      .attr("cx", (d) => vis.xScale(d.properties[this.attributes[0]]))
-      .attr("cy", (d) => vis.yScale(d.properties[this.attributes[1]]))
+      .attr("cx", (d) => vis.xScale(d.properties[this.attributeLabels[0]]))
+      .attr("cy", (d) => vis.yScale(d.properties[this.attributeLabels[1]]))
       .attr("r", 2)
       .attr("opacity", 0.7)
       .attr("fill", vis.config.dot_color);
 
     vis.dots
       .on("mousemove", (event, d) => {
-        const a1 = d.properties[this.attributes[0]]
-          ? `<strong>${d.properties[this.attributes[0]]}</strong> ${
-              this.attributes[0]
+        const a1 = d.properties[this.attributeLabels[0]]
+          ? `<strong>${d.properties[this.attributeLabels[0]]}</strong> ${
+              this.attributeLabels[0]
             }`
           : "No data available";
-        const a2 = d.properties[this.attributes[1]]
-          ? `<strong>${d.properties[this.attributes[1]]}</strong> ${
-              this.attributes[1]
+        const a2 = d.properties[this.attributeLabels[1]]
+          ? `<strong>${d.properties[this.attributeLabels[1]]}</strong> ${
+              this.attributeLabels[1]
             }`
           : "No data available";
         const a3 = d.properties.name
@@ -153,7 +164,7 @@ class ScatterPlot {
           vis.height + vis.config.margin.bottom - 15
         })`
       )
-      .text(this.attributes[0]);
+      .text(this.attributeLabels[0]);
 
     // Y axis label:
     vis.chart
@@ -167,16 +178,16 @@ class ScatterPlot {
         }) rotate(-90)`
       )
       .attr("dy", "1em")
-      .text(this.attributes[1]);
-
-    this.updateVis(); //leave this empty for now...
-  }
-
-  //  //leave this empty for now
-  updateVis() {
+      .text(this.attributeLabels[1]);
     this.renderVis();
   }
 
   // //leave this empty for now...
   renderVis() {}
+
+  setAttributeLabels(attributeLabels) {
+    this.attributeLabels = attributeLabels;
+    this.data = cleanData(this.data, this.attributeLabels); // clean
+    this.updateVis();
+  }
 }
