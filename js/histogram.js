@@ -1,5 +1,5 @@
 class Histogram {
-  constructor(_config, _data, _attribute) {
+  constructor(_config, _data, _attributeLabel) {
     this.config = {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 500,
@@ -13,14 +13,13 @@ class Histogram {
 
     this.data = _data.objects.counties.geometries;
     this.active = d3.select(null);
-    this.attribute = _attribute;
+    this.attributeLabel = _attributeLabel;
     // Call a class function
     this.initVis();
   }
 
   initVis() {
     let vis = this;
-
     // Calculate inner chart size. Margin specifies the space around the actual chart.
     vis.width =
       vis.config.containerWidth -
@@ -39,6 +38,15 @@ class Histogram {
       .attr("width", vis.config.containerWidth)
       .attr("height", vis.config.containerHeight);
 
+    this.updateVis(); //leave this empty for now...
+  }
+
+  //  //leave this empty for now
+  updateVis() {
+    let vis = this;
+    // clear the svg
+    vis.svg.selectAll("*").remove();
+
     var borderPath = vis.svg
       .append("rect")
       .attr("x", 0)
@@ -49,7 +57,7 @@ class Histogram {
       .style("fill", "none")
       .style("stroke-width", "1");
     // Extract the values from the data
-    const values = vis.data.map((d) => d.properties[vis.attribute]);
+    const values = vis.data.map((d) => d.properties[vis.attributeLabel]);
 
     vis.xScale = d3
       .scaleLinear()
@@ -137,7 +145,7 @@ class Histogram {
           vis.height + vis.config.margin.bottom - 15
         })`
       )
-      .text(this.attribute);
+      .text(this.attributeLabel);
 
     // Y axis label:
     vis.chart
@@ -152,14 +160,19 @@ class Histogram {
       )
       .attr("dy", "1em")
       .text("Frequency");
-    this.updateVis(); //leave this empty for now...
-  }
-
-  //  //leave this empty for now
-  updateVis() {
     this.renderVis();
   }
 
   // //leave this empty for now...
   renderVis() {}
+
+  setAttributeLabel(attributeLabel) {
+    this.attributeLabel = attributeLabel;
+    //this.data = cleanData(this.data, [this.attributeLabel]); // clean
+  }
+
+  changeAttribute(attributeLabel) {
+    this.setAttributeLabel(attributeLabel);
+    this.updateVis();
+  }
 }

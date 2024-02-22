@@ -41,16 +41,6 @@ class ScatterPlot {
       .attr("width", vis.config.containerWidth)
       .attr("height", vis.config.containerHeight);
 
-    var borderPath = vis.svg
-      .append("rect")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("height", vis.config.containerHeight)
-      .attr("width", vis.config.containerWidth)
-      .style("stroke", "#999999")
-      .style("fill", "none")
-      .style("stroke-width", "1");
-
     this.updateVis(); //leave this empty for now...
   }
 
@@ -60,6 +50,16 @@ class ScatterPlot {
 
     // clear the svg
     vis.svg.selectAll("*").remove();
+
+    var borderPath = vis.svg
+      .append("rect")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("height", vis.config.containerHeight)
+      .attr("width", vis.config.containerWidth)
+      .style("stroke", "#999999")
+      .style("fill", "none")
+      .style("stroke-width", "1");
 
     vis.xScale = d3
       .scaleLinear()
@@ -188,6 +188,9 @@ class ScatterPlot {
   setAttributeLabels(attributeLabels) {
     this.attributeLabels = attributeLabels;
     this.data = cleanData(this.data, this.attributeLabels); // clean
+  }
+  changeAttributes(attributeLabels) {
+    this.setAttributeLabels(attributeLabels);
     this.updateVis();
   }
 }

@@ -153,6 +153,11 @@ d3.select("#update-btn").on("click", () => {
 
   attributeLabels = [attribute1Label, attribute2Label];
 
-  scatterplot.setAttributeLabels(attributeLabels);
-  scatterplot.updateVis();
+  scatterplot.changeAttributes(attributeLabels);
+
+  histogram1.changeAttribute(attribute1Label);
+
+  histogram2.changeAttribute(attribute2Label);
+
+  choroplethMap.changeAttributes(attributeLabels);
 });

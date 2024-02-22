@@ -4,7 +4,7 @@ class ChoroplethMap {
    * @param {Object}
    * @param {Array}
    */
-  constructor(_config, _data, _attributes) {
+  constructor(_config, _data, _attributeLabels) {
     this.config = {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 1000,
@@ -19,7 +19,7 @@ class ChoroplethMap {
     };
     this.data = _data;
     // this.config = _config;
-    this.attributes = _attributes;
+    this.attributeLabels = _attributeLabels;
     this.us = _data;
 
     this.active = d3.select(null);
@@ -50,7 +50,10 @@ class ChoroplethMap {
       .attr("class", "center-container")
       .attr("width", vis.config.containerWidth)
       .attr("height", vis.config.containerHeight);
-
+    this.updateVis();
+  }
+  updateVis() {
+    let vis = this;
     vis.svg
       .append("rect")
       .attr("class", "background center-container")
@@ -78,7 +81,7 @@ class ChoroplethMap {
       .domain(
         d3.extent(
           vis.data.objects.counties.geometries,
-          (d) => d.properties[this.attributes[0]]
+          (d) => d.properties[this.attributeLabels[0]]
         )
       )
       .range(["#dfe2f2", "#0d003b"])
@@ -115,8 +118,8 @@ class ChoroplethMap {
       .attr("d", vis.path)
       //.attr("class", "county-boundary")
       .attr("fill", (d) => {
-        if (d.properties[this.attributes[0]]) {
-          return vis.colorScale(d.properties[this.attributes[0]]);
+        if (d.properties[this.attributeLabels[0]]) {
+          return vis.colorScale(d.properties[this.attributeLabels[0]]);
         } else {
           return "url(#lightstripe)";
         }
@@ -146,14 +149,14 @@ class ChoroplethMap {
 
     vis.counties
       .on("mousemove", (event, d) => {
-        const a1 = d.properties[this.attributes[0]]
-          ? `<strong>${d.properties[this.attributes[0]]}</strong> ${
-              this.attributes[0]
+        const a1 = d.properties[this.attributeLabels[0]]
+          ? `<strong>${d.properties[this.attributeLabels[0]]}</strong> ${
+              this.attributeLabels[0]
             }`
           : "No data available";
-        const a2 = d.properties[this.attributes[1]]
-          ? `<strong>${d.properties[this.attributes[1]]}</strong> ${
-              this.attributes[1]
+        const a2 = d.properties[this.attributeLabels[1]]
+          ? `<strong>${d.properties[this.attributeLabels[1]]}</strong> ${
+              this.attributeLabels[1]
             }`
           : "No data available";
 
@@ -172,8 +175,8 @@ class ChoroplethMap {
       .on("mouseleave", (event, d) => {
         d3.select(vis.config.tooltipTag).style("display", "none");
         d3.select(event.target).attr("fill", (d) => {
-          if (d.properties[this.attributes[0]]) {
-            return vis.colorScale(d.properties[this.attributes[0]]);
+          if (d.properties[this.attributeLabels[0]]) {
+            return vis.colorScale(d.properties[this.attributeLabels[0]]);
           } else {
             return "url(#lightstripe)";
           }
@@ -189,5 +192,17 @@ class ChoroplethMap {
       )
       .attr("id", "state-borders")
       .attr("d", vis.path);
+    this.renderVis();
+  }
+
+  // //leave this empty for now...
+  renderVis() {}
+
+  setAttributeLabels(attributeLabels) {
+    this.attributeLabels = attributeLabels;
+  }
+  changeAttributes(attributeLabels) {
+    this.setAttributeLabels(attributeLabels);
+    this.updateVis();
   }
 }
