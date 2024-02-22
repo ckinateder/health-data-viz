@@ -15,6 +15,7 @@ class ChoroplethMap {
       legendLeft: 50,
       legendRectHeight: 12,
       legendRectWidth: 150,
+      tooltipTag: _config.tooltipTag || "#tooltip-choropleth",
     };
     this.data = _data;
     // this.config = _config;
@@ -110,10 +111,9 @@ class ChoroplethMap {
       .attr("id", "counties")
       .selectAll("path")
       .data(topojson.feature(vis.us, vis.us.objects.counties).features)
-      .enter()
-      .append("path")
+      .join("path")
       .attr("d", vis.path)
-      // .attr("class", "county-boundary")
+      //.attr("class", "county-boundary")
       .attr("fill", (d) => {
         if (d.properties[this.attributes[0]]) {
           return vis.colorScale(d.properties[this.attributes[0]]);
@@ -145,7 +145,7 @@ class ChoroplethMap {
     }); */
 
     vis.counties
-      .on("mousemove", (d, event) => {
+      .on("mousemove", (event, d) => {
         const a1 = d.properties[this.attributes[0]]
           ? `<strong>${d.properties[this.attributes[0]]}</strong> ${
               this.attributes[0]
@@ -158,21 +158,20 @@ class ChoroplethMap {
           : "No data available";
 
         d3
-          .select("#tooltip-choropleth")
+          .select(vis.config.tooltipTag)
           .style("display", "block")
-          .style("left", `${d3.event.pageX + vis.config.tooltipPadding}px`)
-          .style("top", `${d3.event.pageY + vis.config.tooltipPadding}px`)
-          .html(`
+          .style("left", `${event.pageX + vis.config.tooltipPadding}px`)
+          .style("top", `${event.pageY + vis.config.tooltipPadding}px`).html(`
                         <div class="tooltip-title">${d.properties.name} County</div>
                         <div>${a1}</div>
                         <div>${a2}</div>
                       `);
 
-        d3.select(d3.event.target).attr("fill", "#ff00ee");
+        d3.select(event.target).attr("fill", "orange");
       })
-      .on("mouseleave", () => {
-        d3.select("#tooltip-choropleth").style("display", "none");
-        d3.select(d3.event.target).attr("fill", (d) => {
+      .on("mouseleave", (event, d) => {
+        d3.select(vis.config.tooltipTag).style("display", "none");
+        d3.select(event.target).attr("fill", (d) => {
           if (d.properties[this.attributes[0]]) {
             return vis.colorScale(d.properties[this.attributes[0]]);
           } else {

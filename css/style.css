@@ -21,14 +21,24 @@
 }
 
 .county-boundary {
-    fill: gray;
     stroke: #fff;
     stroke-width: .5px;
 }
 
-.county-boundary:hover, .state:hover {
+.county-boundary-old:hover, .state:hover {
     fill: orange;
 }
+
+.legend {
+    margin: 20px 20px;
+    list-style: none;
+    padding: 0;
+  }
+.legend-li {
+    margin: 0 20px 0 0;
+    cursor: pointer;
+    transition: all ease-in-out 200ms;
+  }
 
 .tooltip {
   position: absolute;

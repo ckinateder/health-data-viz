@@ -6,7 +6,8 @@ class ScatterPlot {
       containerHeight: _config.containerHeight || 140,
       margin: _config.margin || { top: 50, right: 50, bottom: 50, left: 80 },
       tooltipPadding: 10,
-      dot_color: "#aa0011",
+      dot_color: "#0d003b",
+      tooltipTag: _config.tooltipTag || "#tooltip-scatter",
     };
 
     this.data = _data.objects.counties.geometries;
@@ -77,8 +78,7 @@ class ScatterPlot {
       .append("g")
       .selectAll("dot")
       .data(this.data)
-      .enter()
-      .append("circle")
+      .join("circle")
       .attr("cx", (d) => vis.xScale(d.properties[this.attributes[0]]))
       .attr("cy", (d) => vis.yScale(d.properties[this.attributes[1]]))
       .attr("r", 2)
@@ -86,7 +86,7 @@ class ScatterPlot {
       .attr("fill", vis.config.dot_color);
 
     vis.dots
-      .on("mousemove", (d, event) => {
+      .on("mousemove", (event, d) => {
         const a1 = d.properties[this.attributes[0]]
           ? `<strong>${d.properties[this.attributes[0]]}</strong> ${
               this.attributes[0]
@@ -101,11 +101,11 @@ class ScatterPlot {
           ? `<strong>${d.properties.name}</strong> County`
           : "No data available";
 
-        const x = d3.event.pageX;
-        const y = d3.event.pageY;
+        const x = event.pageX;
+        const y = event.pageY;
 
         d3
-          .select("#tooltip-scatter")
+          .select(vis.config.tooltipTag)
           .style("display", "block")
           .style("left", `${x + vis.config.tooltipPadding}px`)
           .style("top", `${y + vis.config.tooltipPadding}px`).html(`
@@ -115,13 +115,17 @@ class ScatterPlot {
                             `);
 
         // make the dot bigger
-        d3.select(d3.event.target).attr("r", 4).attr("fill", "#ff00ee");
+        d3.select(event.target)
+          .attr("r", 4)
+          .attr("fill", "orange")
+          .attr("opacity", 1);
       })
-      .on("mouseleave", (d, event) => {
-        d3.select("#tooltip-scatter").style("display", "none");
-        d3.select(d3.event.target)
+      .on("mouseleave", (event, d) => {
+        d3.select(vis.config.tooltipTag).style("display", "none");
+        d3.select(event.target)
           .attr("r", 2)
-          .attr("fill", vis.config.dot_color);
+          .attr("fill", vis.config.dot_color)
+          .attr("opacity", 0.7);
       });
 
     vis.xAxis = d3.axisBottom(vis.xScale);

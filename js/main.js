@@ -2,6 +2,8 @@
  * Load TopoJSON data of the world and the data of the world wonders
  */
 
+let allData, chloropleth, scatterplot, histogram1, histogram2;
+
 Promise.all([
   d3.json("data/counties-10m.json"),
   d3.csv("data/population.csv"),
@@ -53,9 +55,40 @@ Promise.all([
       }
       //console.log(d);
     });
-    console.log(geoData);
 
-    let attributes = ["park_access", "median_household_income"];
+    /**
+     * Data that doesnt work:
+     * urban_rural_status
+     *
+     */
+
+    // add categories to the attribute select dropdown
+    d3.select("#attribute-1-select")
+      .selectAll("option")
+      .data(Object.keys(geoData.objects.counties.geometries[0].properties))
+      .enter()
+      .append("option")
+      .text((d) => d);
+    d3.select("#attribute-2-select")
+      .selectAll("option")
+      .data(Object.keys(geoData.objects.counties.geometries[0].properties))
+      .enter()
+      .append("option")
+      .text((d) => d);
+    // swap the attributes with swap button
+    d3.select("#swap-btn").on("click", () => {
+      let attribute1 = d3.select("#attribute-1-select").property("value");
+      let attribute2 = d3.select("#attribute-2-select").property("value");
+      d3.select("#attribute-1-select").property("value", attribute2);
+      d3.select("#attribute-2-select").property("value", attribute1);
+    });
+
+    console.log(geoData);
+    allData = geoData;
+    let attributes = [
+      "median_household_income",
+      "percent_coronary_heart_disease",
+    ];
 
     /**
     geoData.objects.counties.geometries = cleanData(
@@ -63,6 +96,12 @@ Promise.all([
       attributes
     );
     */
+
+    /**
+     * Rewrite the data to only include the attributes we want to use, use buttons
+     * to switch between the attributes, add dropdown to select the 2 attributes
+     * Maybe pass two arrays of data to the scatterplot and choroplethmap
+     */
 
     let panelWidth =
       (window.innerWidth ||
@@ -79,43 +118,47 @@ Promise.all([
     panelHeight = 500;
 
     // colored by first attribute
-    const choroplethMap = new ChoroplethMap(
+    choroplethMap = new ChoroplethMap(
       {
         parentElement: ".choropleth",
         containerWidth: panelWidth,
         containerHeight: panelHeight,
+        tooltipTag: "#tooltip-choropleth",
       },
-      geoData,
+      allData,
       attributes
     );
 
-    const scatterplot = new ScatterPlot(
+    scatterplot = new ScatterPlot(
       {
         parentElement: ".scatterplot",
         containerWidth: panelWidth,
         containerHeight: panelHeight,
+        tooltipTag: "#tooltip-scatter",
       },
-      geoData,
+      allData,
       attributes
     );
 
-    const histogram1 = new Histogram(
+    histogram1 = new Histogram(
       {
         parentElement: ".histogram1",
         containerWidth: panelWidth,
         containerHeight: panelHeight,
+        tooltipTag: "#tooltip-hist-1",
       },
-      geoData,
+      allData,
       attributes[0]
     );
 
-    const histogram2 = new Histogram(
+    histogram2 = new Histogram(
       {
         parentElement: ".histogram2",
         containerWidth: panelWidth,
         containerHeight: panelHeight,
+        tooltipTag: "#tooltip-hist-2",
       },
-      geoData,
+      allData,
       attributes[1]
     );
   })

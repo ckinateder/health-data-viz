@@ -10,25 +10,31 @@
         <h1>Yay!</h1>
         <h4>Calvin Kinateder</h4>
     </div>
-    
+    <ul class="legend">
+        <div class="legend-title">Select Attributes</div>
+        <li class="legend-li"><select class="attribute-select" id="attribute-1-select"></select></li>
+        <li class="legend-li"><select class="attribute-select" id="attribute-2-select"></select></li>
+        <li class="legend-li"><button id="swap-btn">Swap</button></li>
+    </ul>
     <div class="grid-container">
         <div class="choropleth window">
             <div class="tooltip" id="tooltip-choropleth"></div>
         </div>
         <div class="scatterplot window">
-            <div class="tooltip" id="tooltip-scatter"></div></div>
-        <div class="histogram1 window"></div>
-        <div class="histogram2 window"></div>
+            <div class="tooltip" id="tooltip-scatter"></div>
+        </div>
+        <div class="histogram1 window">
+            <div class="tooltip" id="tooltip-hist-1"></div></div>
+        <div class="histogram2 window">
+            <div class="tooltip" id="tooltip-hist-2"></div></div>
     </div>
 
     <svg height="5" width="5" xmlns="http://www.w3.org/2000/svg" version="1.1"> <defs> <pattern id="lightstripe" patternUnits="userSpaceOnUse" width="5" height="5"> <image xlink:href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc1JyBoZWlnaHQ9JzUnPgogIDxyZWN0IHdpZHRoPSc1JyBoZWlnaHQ9JzUnIGZpbGw9J3doaXRlJy8+CiAgPHBhdGggZD0nTTAgNUw1IDBaTTYgNEw0IDZaTS0xIDFMMSAtMVonIHN0cm9rZT0nIzg4OCcgc3Ryb2tlLXdpZHRoPScxJy8+Cjwvc3ZnPg==" x="0" y="0" width="5" height="5"> </image> </pattern> </defs></svg>
 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
+    <script src="js/d3.v6.min.js"></script>
     <script src="js/topojson.v3.js"></script>
 
     
-    <!-- <script src="js/d3.v6.min.js"></script> -->
-    <!-- <script src="js/topojson.v3.js"></script> -->
     <script src="js/util.js"></script>
     <script src="js/choroplethMap.js"></script>
     <script src="js/histogram.js"></script>  

@@ -6,6 +6,9 @@ class Histogram {
       containerHeight: _config.containerHeight || 140,
       margin: _config.margin || { top: 50, right: 50, bottom: 50, left: 80 },
       num_bins: _config.num_bins || 40,
+      rect_color: _config.rect_color || "#0d708b",
+      tooltipPadding: 10,
+      tooltipTag: _config.tooltipTag || "#tooltip-histogram",
     };
 
     this.data = _data.objects.counties.geometries;
@@ -76,8 +79,7 @@ class Histogram {
       .append("g")
       .selectAll("rect")
       .data(vis.bins)
-      .enter()
-      .append("rect")
+      .join("rect")
       .attr("x", 1)
       .attr(
         "transform",
@@ -89,7 +91,26 @@ class Histogram {
         return r < 0 ? 0 : r; // if the width is negative, set it to 0
       })
       .attr("height", (d) => vis.height - vis.yScale(d.length))
-      .style("fill", "#69b3a2");
+      .style("fill", vis.config.rect_color);
+
+    vis.rects
+      .on("mousemove", (event, d) => {
+        d3.select(event.currentTarget).style("fill", "orange");
+
+        const x = event.pageX;
+        const y = event.pageY;
+        d3.select(vis.config.tooltipTag)
+          .style("display", "block")
+          .style("left", `${x + vis.config.tooltipPadding}px`)
+          .style("top", `${y + vis.config.tooltipPadding}px`)
+          .html(
+            `<strong>${d.length}</strong> counties between <strong>${d.x0}</strong> and <strong>${d.x1}</strong>`
+          );
+      })
+      .on("mouseout", (event, d) => {
+        d3.select(vis.config.tooltipTag).style("display", "none");
+        d3.select(event.currentTarget).style("fill", vis.config.rect_color);
+      });
 
     vis.xAxis = d3.axisBottom(vis.xScale);
     vis.yAxis = d3.axisLeft(vis.yScale);
