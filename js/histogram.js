@@ -4,7 +4,7 @@ class Histogram {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 500,
       containerHeight: _config.containerHeight || 140,
-      margin: _config.margin || { top: 50, right: 50, bottom: 50, left: 50 },
+      margin: _config.margin || { top: 50, right: 50, bottom: 50, left: 80 },
       num_bins: _config.num_bins || 40,
     };
 

@@ -55,25 +55,35 @@ Promise.all([
     });
     console.log(geoData);
 
-    let attributes = ["median_household_income", "air_quality"];
+    let attributes = ["park_access", "median_household_income"];
 
-    // clean data by removing counties with missing data or -1
-    geoData.objects.counties.geometries = geoData.objects.counties.geometries.filter((d) => {
-      return (
-        d.properties[attributes[0]] &&
-        d.properties[attributes[1]] &&
-        !isNaN(d.properties[attributes[0]]) &&
-        !isNaN(d.properties[attributes[1]]) &&
-        d.properties[attributes[0]] !== -1 &&
-        d.properties[attributes[1]] !== -1
-      );
-    });
+    /**
+    geoData.objects.counties.geometries = cleanData(
+      geoData.objects.counties.geometries,
+      attributes
+    );
+    */
 
+    let panelWidth =
+      (window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth) / 2;
+    let panelHeight =
+      (window.innerHeight ||
+        document.documentElement.clientHeight ||
+        document.body.clientHeight) / 2.52;
+
+    console.log(panelWidth, panelHeight);
+
+    panelWidth = 900;
+    panelHeight = 500;
+
+    // colored by first attribute
     const choroplethMap = new ChoroplethMap(
       {
         parentElement: ".choropleth",
-        containerWidth: 900,
-        containerHeight: 500,
+        containerWidth: panelWidth,
+        containerHeight: panelHeight,
       },
       geoData,
       attributes
@@ -82,8 +92,8 @@ Promise.all([
     const scatterplot = new ScatterPlot(
       {
         parentElement: ".scatterplot",
-        containerWidth: 900,
-        containerHeight: 500,
+        containerWidth: panelWidth,
+        containerHeight: panelHeight,
       },
       geoData,
       attributes
@@ -92,8 +102,8 @@ Promise.all([
     const histogram1 = new Histogram(
       {
         parentElement: ".histogram1",
-        containerWidth: 900,
-        containerHeight: 500,
+        containerWidth: panelWidth,
+        containerHeight: panelHeight,
       },
       geoData,
       attributes[0]
@@ -102,8 +112,8 @@ Promise.all([
     const histogram2 = new Histogram(
       {
         parentElement: ".histogram2",
-        containerWidth: 900,
-        containerHeight: 500,
+        containerWidth: panelWidth,
+        containerHeight: panelHeight,
       },
       geoData,
       attributes[1]

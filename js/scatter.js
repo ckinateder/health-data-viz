@@ -4,11 +4,14 @@ class ScatterPlot {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 500,
       containerHeight: _config.containerHeight || 140,
-      margin: _config.margin || { top: 50, right: 50, bottom: 50, left: 50 },
+      margin: _config.margin || { top: 50, right: 50, bottom: 50, left: 80 },
       tooltipPadding: 10,
+      dot_color: "#aa0011",
     };
 
     this.data = _data.objects.counties.geometries;
+    this.data = cleanData(this.data, _attributes); // clean
+
     this.active = d3.select(null);
     this.attributes = _attributes;
     // Call a class function
@@ -79,16 +82,8 @@ class ScatterPlot {
       .attr("cx", (d) => vis.xScale(d.properties[this.attributes[0]]))
       .attr("cy", (d) => vis.yScale(d.properties[this.attributes[1]]))
       .attr("r", 2)
-      .attr("fill", (d) => {
-        if (
-          !isNaN(d.properties[this.attributes[0]]) &&
-          !isNaN(d.properties[this.attributes[1]])
-        ) {
-          return "#aa0011";
-        } else {
-          return "url(#lightstripe)";
-        }
-      });
+      .attr("opacity", 0.7)
+      .attr("fill", vis.config.dot_color);
 
     vis.dots
       .on("mousemove", (d, event) => {
@@ -118,9 +113,15 @@ class ScatterPlot {
                               <div>${a1}</div>
                               <div>${a2}</div>
                             `);
+
+        // make the dot bigger
+        d3.select(d3.event.target).attr("r", 4).attr("fill", "#ff00ee");
       })
-      .on("mouseleave", () => {
+      .on("mouseleave", (d, event) => {
         d3.select("#tooltip-scatter").style("display", "none");
+        d3.select(d3.event.target)
+          .attr("r", 2)
+          .attr("fill", vis.config.dot_color);
       });
 
     vis.xAxis = d3.axisBottom(vis.xScale);

@@ -57,12 +57,11 @@
 .window {
     padding: 20px;
     margin: 5px;
-    border: #000 1px solid;
-    max-width: 900px;
+    border: hsl(0, 0%, 71%) 1px solid;
 }
 
-.grid-container-old{
-    margin: 20px auto;
+.grid-container{
+    margin: auto auto;
     width: auto;
     height: auto;
     display:grid;
