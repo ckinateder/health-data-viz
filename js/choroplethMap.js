@@ -50,10 +50,12 @@ class ChoroplethMap {
       .attr("class", "center-container")
       .attr("width", vis.config.containerWidth)
       .attr("height", vis.config.containerHeight);
+
     this.updateVis();
   }
   updateVis() {
     let vis = this;
+
     vis.svg
       .append("rect")
       .attr("class", "background center-container")
@@ -125,28 +127,6 @@ class ChoroplethMap {
         }
       });
 
-    /**
-  vis.counties
-    .on('mousemove', (d, event) => {
-      const popDensity = d.properties.pop ? `<strong>${d.properties.pop}</strong> pop. density per km<sup>2</sup>` : 'No pop data available';
-      const medianHouseholdIncome = d.properties.median_household_income ? `<strong>$${d.properties.median_household_income}</strong> median household income` : 'No income data available';
-      const percentStroke = d.properties.percent_stroke ? `<strong>${d.properties.percent_stroke}%</strong> of people have had a stroke` : 'No stroke data available';
-      const airQuality = d.properties.air_quality ? `<strong>${d.properties.air_quality}</strong> air quality index` : 'No air quality data available';
-      d3.select('.tooltip')
-        .style('display', 'block')
-        .style('left', `${d3.event.pageX + vis.config.tooltipPadding}px`)
-        .style('top', `${d3.event.pageY + vis.config.tooltipPadding}px`)
-        .html(`
-                      <div class="tooltip-title">${d.properties.name} County</div>
-                      <div>${medianHouseholdIncome}</div>
-                      <div>${percentStroke}</div>
-                      <div>${airQuality}</div>  
-                    `);
-    })
-    .on('mouseleave', () => {
-      d3.select('.tooltip').style('display', 'none');
-    }); */
-
     vis.counties
       .on("mousemove", (event, d) => {
         const a1 = d.properties[this.attributeLabels[0]]
@@ -192,6 +172,7 @@ class ChoroplethMap {
       )
       .attr("id", "state-borders")
       .attr("d", vis.path);
+
     this.renderVis();
   }
 

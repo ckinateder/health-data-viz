@@ -86,15 +86,21 @@ Promise.all([
       .append("option")
       .text((d) => d);
 
+    // default attributes
     attributeLabels = [
       "median_household_income",
       "percent_coronary_heart_disease",
     ];
+
+    // set #attribute-1-select and #attribute-2-select to default attributes
+    d3.select("#attribute-1-select").property("value", attributeLabels[0]);
+    d3.select("#attribute-2-select").property("value", attributeLabels[1]);
+
     const panelWidth = 900;
-    const panelHeight = 500;
+    const panelHeight = 450;
 
     // colored by first attribute
-    choroplethMap = new ChoroplethMap(
+    chloropleth = new ChoroplethMap(
       {
         parentElement: ".choropleth",
         containerWidth: panelWidth,
@@ -146,18 +152,30 @@ d3.select("#swap-btn").on("click", () => {
   let attribute2 = d3.select("#attribute-2-select").property("value");
   d3.select("#attribute-1-select").property("value", attribute2);
   d3.select("#attribute-2-select").property("value", attribute1);
+
+  updateButton();
 });
 d3.select("#update-btn").on("click", () => {
+  updateButton();
+});
+
+// automataically update the attributes when the dropdown is changed
+d3.select("#attribute-1-select").on("change", () => {
+  updateButton();
+});
+d3.select("#attribute-2-select").on("change", () => {
+  updateButton();
+});
+
+// update the attributes with update button
+function updateButton() {
   let attribute1Label = d3.select("#attribute-1-select").property("value");
   let attribute2Label = d3.select("#attribute-2-select").property("value");
 
   attributeLabels = [attribute1Label, attribute2Label];
 
+  chloropleth.changeAttributes(attributeLabels);
   scatterplot.changeAttributes(attributeLabels);
-
   histogram1.changeAttribute(attribute1Label);
-
   histogram2.changeAttribute(attribute2Label);
-
-  choroplethMap.changeAttributes(attributeLabels);
-});
+}
