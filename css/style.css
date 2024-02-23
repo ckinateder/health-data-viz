@@ -64,9 +64,13 @@
   list-style: none;
   width: fit-content;
   height: auto;
+
   .legend-title {
     font-weight: 600;
-    margin-bottom: 5px;
+    margin: 10px 0px 0px 0px;
+  }
+  #additional-controls-title {
+    margin: 15px 0px 0px 0px;
   }
   .legend-controls {
     display: flex;
