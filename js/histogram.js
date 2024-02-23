@@ -152,6 +152,7 @@ class Histogram {
       .append("text")
       .attr("text-anchor", "middle")
       .attr("font-size", "12px")
+      .attr("font-weight", 500)
       .attr(
         "transform",
         `translate(${vis.width / 2}, ${
@@ -165,9 +166,10 @@ class Histogram {
       .append("text")
       .attr("text-anchor", "middle")
       .attr("font-size", "12px")
+      .attr("font-weight", 500)
       .attr(
         "transform",
-        `translate(${-vis.config.margin.left + 5}, ${
+        `translate(${-vis.config.margin.left + 15}, ${
           vis.height / 2
         }) rotate(-90)`
       )
@@ -186,6 +188,9 @@ class Histogram {
 
   changeAttribute(attributeLabel) {
     this.setAttributeLabel(attributeLabel);
-    this.updateVis();
+  }
+
+  changeColorRange(colorRange) {
+    this.config.colorRange = colorRange;
   }
 }

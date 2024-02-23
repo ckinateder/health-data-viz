@@ -2,7 +2,19 @@
 <html>
   <head>
     <title>Project 1</title>
-    <link rel="icon" href="data:;base64,iVBORwOKGO=" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
@@ -12,35 +24,86 @@
     </div>
 
     <div class="viz-portion">
-    
-      <ul class="legend" title="Select data from the dropdown">
-          <div class="viz-title">4-Panel Visualization</div>
+      <div class="legend" title="Select data from the dropdown">
+        <div class="viz-title">4-Panel Visualization</div>
 
         <div class="legend-title">Select Attributes</div>
-        <li class="legend-li">
-          <select class="attribute-select" id="attribute-1-select"></select>
-        </li>
-        <li class="legend-li">
-          <select class="attribute-select" id="attribute-2-select"></select>
-        </li>
-        <li class="legend-li">
-          <div class="legend-controls">
-            <div class="buttons">
-              <button id="update-btn" style="display: none;" title="Refresh the views">Update</button>
-              <button id="swap-btn" title="Swap attributes">Swap</button>
-              <button id="reset-btn" title="Reset attributes to default">
-                Reset
-              </button>
-            </div>
-            <div class="sliders">
-              <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-              <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-              <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-              <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-            </div>
-
-        </li>
-      </ul>
+        <div class="legend-controls">
+          <div class="dropdowns">
+            <select
+              class="legend-controls-element attribute-select"
+              id="attribute-1-select"
+            ></select>
+            <select
+              class="legend-controls-element attribute-select"
+              id="attribute-2-select"
+            ></select>
+          </div>
+        </div>
+        <div class="legend-controls buttons">
+          <button id="update-btn" title="Refresh the views">Update</button>
+          <button id="swap-btn" title="Swap attributes">Swap</button>
+          <button id="reset-btn" title="Reset attributes to default">
+            Reset
+          </button>
+        </div>
+        <div class="legend-controls">
+          <div class="color-pickers">
+            <span
+              ><input
+                type="color"
+                id="colorpicker-1"
+                class="legend-controls-element"
+                value="#00BEFF"
+              />
+              Color 1</span
+            >
+            <span
+              ><input
+                type="color"
+                id="colorpicker-2"
+                class="legend-controls-element"
+                value="#571846"
+              />
+              Color 2</span
+            >
+          </div>
+          <div class="sliders">
+            <input
+              type="range"
+              min="1"
+              max="100"
+              value="50"
+              class="slider"
+              id="myRange"
+            />
+            <input
+              type="range"
+              min="1"
+              max="100"
+              value="50"
+              class="slider"
+              id="myRange"
+            />
+            <input
+              type="range"
+              min="1"
+              max="100"
+              value="50"
+              class="slider"
+              id="myRange"
+            />
+            <input
+              type="range"
+              min="1"
+              max="100"
+              value="50"
+              class="slider"
+              id="myRange"
+            />
+          </div>
+        </div>
+      </div>
 
       <div class="grid-container">
         <div class="choropleth window">

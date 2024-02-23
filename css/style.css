@@ -65,25 +65,35 @@
   width: fit-content;
   height: auto;
   .legend-title {
-    font-size: 14px;
     font-weight: 600;
     margin-bottom: 5px;
-  }
-  .legend-li {
-    padding: 2px 0px;
-    cursor: pointer;
-    transition: all ease-in-out 200ms;
   }
   .legend-controls {
     display: flex;
     flex-direction: column;
-    margin-top: 5px;
+    transition: all ease-in-out 200ms;
+    margin: 2px 0px;
+    .legend-controls-element {
+      margin: 2px 0px;
+    }
+  }
+  .dropdowns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 14px;
   }
   .buttons {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+  }
+  .color-pickers {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
   }
   .sliders {
     display: flex;
@@ -95,8 +105,8 @@
   }
   .viz-title {
     font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 10px;
+    font-weight: 700;
+    margin-bottom: 5px;
   }
 }
 
@@ -106,22 +116,22 @@
   width: fit-content;
   height: fit-content;
   margin: 20px 5px;
-  padding: 10px 0px 10px 10px;
+  padding: 5px 0px 5px 5px;
   border: hsl(0, 0%, 71%) 1px solid;
 }
 
 .grid-container {
-  margin: auto 10px;
+  margin: auto 5px;
   width: fit-content;
   height: auto;
   display: grid;
   grid-template-columns: auto auto;
   grid-row: auto auto;
-  grid-column-gap: 20px;
-  grid-row-gap: 20px;
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
 
   .window {
-    padding: 20px;
+    padding: 10px;
     margin: 5px;
     display: flex;
     align-items: center;
@@ -131,5 +141,6 @@
 }
 
 * {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-family: "Kode Mono", monospace;
+  font-optical-sizing: auto;
 }

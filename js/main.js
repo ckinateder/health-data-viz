@@ -8,7 +8,9 @@ let allData,
   histogram1,
   histogram2,
   attributeLabels,
-  defaultAttributeLabels;
+  defaultAttributeLabels,
+  defaultColorRange,
+  colorRange;
 
 Promise.all([
   d3.json("data/counties-10m.json"),
@@ -97,8 +99,10 @@ Promise.all([
       "median_household_income",
       "percent_coronary_heart_disease",
     ];
+    defaultColorRange = ["#00BEFF", "#571846"];
 
     attributeLabels = defaultAttributeLabels;
+    colorRange = defaultColorRange;
 
     // set #attribute-1-select and #attribute-2-select to default attributes
     d3.select("#attribute-1-select").property("value", attributeLabels[0]);
@@ -106,8 +110,7 @@ Promise.all([
 
     const panelWidth = 900;
     const panelHeight = 450;
-    //const colorRange = ["#0A2F51", "#BFE1B0"];
-    const colorRange = ["#00BEFF", "#571846"];
+    //const colorRange = ["#386C30", "#04F11B"];
 
     // colored by first attribute
     chloropleth = new ChoroplethMap(
@@ -176,7 +179,10 @@ d3.select("#update-btn").on("click", () => {
 d3.select("#reset-btn").on("click", () => {
   d3.select("#attribute-1-select").property("value", defaultAttributeLabels[0]);
   d3.select("#attribute-2-select").property("value", defaultAttributeLabels[1]);
+  d3.select("#colorpicker-1").property("value", defaultColorRange[0]);
+  d3.select("#colorpicker-2").property("value", defaultColorRange[1]);
   updateButton();
+  updateColor();
 });
 
 // automataically update the attributes when the dropdown is changed
@@ -187,6 +193,27 @@ d3.select("#attribute-2-select").on("change", () => {
   updateButton();
 });
 
+d3.select("#colorpicker-1").on("change", () => {
+  updateColor();
+});
+d3.select("#colorpicker-2").on("change", () => {
+  updateColor();
+});
+
+function updateColor() {
+  let color1 = d3.select("#colorpicker-1").property("value");
+  let color2 = d3.select("#colorpicker-2").property("value");
+  let colorRange = [color1, color2];
+  chloropleth.changeColorRange(colorRange);
+  chloropleth.updateVis();
+  scatterplot.changeColorRange(colorRange);
+  scatterplot.updateVis();
+  histogram1.changeColorRange(colorRange);
+  histogram1.updateVis();
+  histogram2.changeColorRange(colorRange);
+  histogram2.updateVis();
+}
+
 // update the attributes with update button
 function updateButton() {
   let attribute1Label = d3.select("#attribute-1-select").property("value");
@@ -195,7 +222,11 @@ function updateButton() {
   attributeLabels = [attribute1Label, attribute2Label];
 
   chloropleth.changeAttributes(attributeLabels);
+  chloropleth.updateVis();
   scatterplot.changeAttributes(attributeLabels);
+  scatterplot.updateVis();
   histogram1.changeAttribute(attribute1Label);
+  histogram1.updateVis();
   histogram2.changeAttribute(attribute2Label);
+  histogram2.updateVis();
 }

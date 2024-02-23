@@ -204,6 +204,8 @@ class ChoroplethMap {
   }
   changeAttributes(attributeLabels) {
     this.setAttributeLabels(attributeLabels);
-    this.updateVis();
+  }
+  changeColorRange(colorRange) {
+    this.config.colorRange = colorRange;
   }
 }

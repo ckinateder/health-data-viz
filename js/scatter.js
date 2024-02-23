@@ -170,6 +170,7 @@ class ScatterPlot {
       .append("text")
       .attr("text-anchor", "middle")
       .attr("font-size", "12px")
+      .attr("font-weight", 500)
       .attr(
         "transform",
         `translate(${vis.width / 2}, ${
@@ -183,9 +184,10 @@ class ScatterPlot {
       .append("text")
       .attr("text-anchor", "middle")
       .attr("font-size", "12px")
+      .attr("font-weight", 500)
       .attr(
         "transform",
-        `translate(${-vis.config.margin.left + 5}, ${
+        `translate(${-vis.config.margin.left + 10}, ${
           vis.height / 2
         }) rotate(-90)`
       )
@@ -215,6 +217,8 @@ class ScatterPlot {
   changeAttributes(attributeLabels) {
     this.setAttributeLabels(attributeLabels);
     //this.config.containerWidth -= 20;
-    this.updateVis();
+  }
+  changeColorRange(colorRange) {
+    this.config.colorRange = colorRange;
   }
 }
