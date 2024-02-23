@@ -2,7 +2,13 @@
  * Load TopoJSON data of the world and the data of the world wonders
  */
 
-let allData, chloropleth, scatterplot, histogram1, histogram2, attributeLabels;
+let allData,
+  chloropleth,
+  scatterplot,
+  histogram1,
+  histogram2,
+  attributeLabels,
+  defaultAttributeLabels;
 
 Promise.all([
   d3.json("data/counties-10m.json"),
@@ -87,10 +93,12 @@ Promise.all([
       .text((d) => d);
 
     // default attributes
-    attributeLabels = [
+    defaultAttributeLabels = [
       "median_household_income",
       "percent_coronary_heart_disease",
     ];
+
+    attributeLabels = defaultAttributeLabels;
 
     // set #attribute-1-select and #attribute-2-select to default attributes
     d3.select("#attribute-1-select").property("value", attributeLabels[0]);
@@ -98,6 +106,8 @@ Promise.all([
 
     const panelWidth = 900;
     const panelHeight = 450;
+    //const colorRange = ["#0A2F51", "#BFE1B0"];
+    const colorRange = ["#FF8E98", "#1B0034"];
 
     // colored by first attribute
     chloropleth = new ChoroplethMap(
@@ -106,6 +116,7 @@ Promise.all([
         containerWidth: panelWidth,
         containerHeight: panelHeight,
         tooltipTag: "#tooltip-choropleth",
+        colorRange: colorRange,
       },
       allData,
       attributeLabels
@@ -117,6 +128,7 @@ Promise.all([
         containerWidth: panelWidth,
         containerHeight: panelHeight,
         tooltipTag: "#tooltip-scatter",
+        colorRange: colorRange,
       },
       allData,
       attributeLabels
@@ -128,6 +140,7 @@ Promise.all([
         containerWidth: panelWidth,
         containerHeight: panelHeight,
         tooltipTag: "#tooltip-hist-1",
+        colorRange: colorRange,
       },
       allData,
       attributeLabels[0]
@@ -139,6 +152,7 @@ Promise.all([
         containerWidth: panelWidth,
         containerHeight: panelHeight,
         tooltipTag: "#tooltip-hist-2",
+        colorRange: colorRange,
       },
       allData,
       attributeLabels[1]
@@ -156,6 +170,12 @@ d3.select("#swap-btn").on("click", () => {
   updateButton();
 });
 d3.select("#update-btn").on("click", () => {
+  updateButton();
+});
+
+d3.select("#reset-btn").on("click", () => {
+  d3.select("#attribute-1-select").property("value", defaultAttributeLabels[0]);
+  d3.select("#attribute-2-select").property("value", defaultAttributeLabels[1]);
   updateButton();
 });
 

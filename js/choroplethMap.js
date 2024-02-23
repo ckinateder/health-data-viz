@@ -16,6 +16,7 @@ class ChoroplethMap {
       legendRectHeight: 12,
       legendRectWidth: 150,
       tooltipTag: _config.tooltipTag || "#tooltip-choropleth",
+      colorRange: _config.colorRange || ["#0A2F51", "#BFE1B0"],
     };
     this.data = _data;
     // this.config = _config;
@@ -81,7 +82,7 @@ class ChoroplethMap {
           (d) => d.properties[this.attributeLabels[0]]
         )
       )
-      .range(["#dfe2f2", "#0d003b"])
+      .range(this.config.colorRange)
       .interpolate(d3.interpolateHcl);
 
     vis.path = d3.geoPath().projection(vis.projection);
@@ -137,7 +138,7 @@ class ChoroplethMap {
           (d) => d.properties[this.attributeLabels[0]]
         )
       )
-      .range(["#dfe2f2", "#0d003b"])
+      .range(vis.config.colorRange)
       .interpolate(d3.interpolateHcl);
 
     vis.counties.attr("fill", (d) => {
@@ -171,17 +172,20 @@ class ChoroplethMap {
                         <div>${a2}</div>
                       `);
 
-        d3.select(event.target).attr("fill", "orange");
+        d3.select(event.target).transition().duration(0).attr("fill", "orange");
       })
       .on("mouseleave", (event, d) => {
         d3.select(vis.config.tooltipTag).style("display", "none");
-        d3.select(event.target).attr("fill", (d) => {
-          if (d.properties[this.attributeLabels[0]]) {
-            return vis.colorScale(d.properties[this.attributeLabels[0]]);
-          } else {
-            return "url(#lightstripe)";
-          }
-        });
+        d3.select(event.target)
+          .transition()
+          .duration(250)
+          .attr("fill", (d) => {
+            if (d.properties[this.attributeLabels[0]]) {
+              return vis.colorScale(d.properties[this.attributeLabels[0]]);
+            } else {
+              return "url(#lightstripe)";
+            }
+          });
       });
 
     this.renderVis();

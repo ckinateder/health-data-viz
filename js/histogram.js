@@ -5,10 +5,10 @@ class Histogram {
       containerWidth: _config.containerWidth || 500,
       containerHeight: _config.containerHeight || 140,
       margin: _config.margin || { top: 50, right: 50, bottom: 50, left: 80 },
-      num_bins: _config.num_bins || 40,
-      rect_color: _config.rect_color || "#0d708b",
+      numBins: _config.numBins || 40,
       tooltipPadding: 10,
       tooltipTag: _config.tooltipTag || "#tooltip-histogram",
+      colorRange: _config.colorRange || ["#0A2F51", "#BFE1B0"],
     };
 
     this.data = _data.objects.counties.geometries;
@@ -67,7 +67,7 @@ class Histogram {
     vis.histogram = d3
       .histogram()
       .domain(vis.xScale.domain())
-      .thresholds(vis.xScale.ticks(vis.config.num_bins));
+      .thresholds(vis.xScale.ticks(vis.config.numBins));
     vis.bins = vis.histogram(values);
 
     vis.yScale = d3
@@ -81,6 +81,12 @@ class Histogram {
         "transform",
         `translate(${vis.config.margin.left}, ${vis.config.margin.top})`
       );
+
+    vis.colorScale = d3
+      .scaleLinear()
+      .domain([0, d3.max(vis.bins, (d) => d.length)])
+      .range(vis.config.colorRange)
+      .interpolate(d3.interpolateHcl);
 
     // append the bar rectangles to the svg element
     vis.rects = vis.chart
@@ -99,11 +105,14 @@ class Histogram {
         return r < 0 ? 0 : r; // if the width is negative, set it to 0
       })
       .attr("height", (d) => vis.height - vis.yScale(d.length))
-      .style("fill", vis.config.rect_color);
+      .attr("fill", (d) => vis.colorScale(d.length));
 
     vis.rects
       .on("mousemove", (event, d) => {
-        d3.select(event.currentTarget).style("fill", "orange");
+        d3.select(event.currentTarget)
+          .transition()
+          .duration(50)
+          .style("fill", "orange");
 
         const x = event.pageX;
         const y = event.pageY;
@@ -117,7 +126,10 @@ class Histogram {
       })
       .on("mouseout", (event, d) => {
         d3.select(vis.config.tooltipTag).style("display", "none");
-        d3.select(event.currentTarget).style("fill", vis.config.rect_color);
+        d3.select(event.currentTarget)
+          .transition()
+          .duration(250)
+          .style("fill", (d) => vis.colorScale(d.length));
       });
 
     vis.xAxis = d3.axisBottom(vis.xScale);

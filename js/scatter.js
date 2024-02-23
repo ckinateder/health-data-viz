@@ -8,6 +8,7 @@ class ScatterPlot {
       tooltipPadding: 10,
       dot_color: "#0d003b",
       tooltipTag: _config.tooltipTag || "#tooltip-scatter",
+      colorRange: _config.colorRange || ["#0A2F51", "#BFE1B0"],
     };
 
     this.data = _data.objects.counties.geometries;
@@ -83,6 +84,13 @@ class ScatterPlot {
         "transform",
         `translate(${vis.config.margin.left}, ${vis.config.margin.top})`
       );
+    vis.colorScale = d3
+      .scaleLinear()
+      .domain(
+        d3.extent(this.data, (d) => d.properties[this.attributeLabels[0]])
+      )
+      .range(this.config.colorRange)
+      .interpolate(d3.interpolateHcl);
 
     // translate these better
     vis.dots = vis.chart
@@ -93,8 +101,10 @@ class ScatterPlot {
       .attr("cx", (d) => vis.xScale(d.properties[this.attributeLabels[0]]))
       .attr("cy", (d) => vis.yScale(d.properties[this.attributeLabels[1]]))
       .attr("r", 2)
-      .attr("opacity", 0.7)
-      .attr("fill", vis.config.dot_color);
+      .attr("opacity", 0.8)
+      .attr("fill", (d) =>
+        vis.colorScale(d.properties[this.attributeLabels[0]])
+      );
 
     vis.dots
       .on("mousemove", (event, d) => {
@@ -127,16 +137,22 @@ class ScatterPlot {
 
         // make the dot bigger
         d3.select(event.target)
-          .attr("r", 4)
+          .transition()
+          .duration(50)
+          .attr("r", 5)
           .attr("fill", "orange")
           .attr("opacity", 1);
       })
       .on("mouseleave", (event, d) => {
         d3.select(vis.config.tooltipTag).style("display", "none");
         d3.select(event.target)
+          .transition()
+          .duration(250)
           .attr("r", 2)
-          .attr("fill", vis.config.dot_color)
-          .attr("opacity", 0.7);
+          .attr("fill", (d) =>
+            vis.colorScale(d.properties[this.attributeLabels[0]])
+          )
+          .attr("opacity", 0.8);
       });
 
     vis.xAxis = d3.axisBottom(vis.xScale);

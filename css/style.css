@@ -31,14 +31,28 @@
 }
 
 .legend {
-  margin: 20px 20px;
+  border: hsl(0, 0%, 71%) 1px solid;
+  margin: 20px 5px;
+  padding: 10px;
   list-style: none;
-  padding: 0;
-}
-.legend-li {
-  margin: 0 20px 0 0;
-  cursor: pointer;
-  transition: all ease-in-out 200ms;
+  width: fit-content;
+  .legend-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  .legend-li {
+    padding: 2px 0px;
+    cursor: pointer;
+    transition: all ease-in-out 200ms;
+  }
+  .legend-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+    margin-top: 5px;
+  }
 }
 
 .tooltip {
@@ -52,40 +66,38 @@
   padding: 8px;
   min-width: 120px;
   color: #333;
-}
-.tooltip-title {
-  color: #000;
-  font-size: 14px;
-  font-weight: 600;
+  .tooltip-title {
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+  }
 }
 .info {
-  padding: 0px 20px;
+  padding: 0px 10px;
   margin: 5px;
   font: 12px/14px Arial, sans-serif;
-  border: #000 1px solid;
-  max-width: 200px;
-}
-.window {
-  padding: 20px;
-  margin: 5px;
   border: hsl(0, 0%, 71%) 1px solid;
+  width: fit-content;
+  height: fit-content;
 }
 
 .grid-container {
-  margin: auto auto;
-  width: auto;
+  margin: auto 0px;
+  width: fit-content;
   height: auto;
   display: grid;
   grid-template-columns: auto auto;
   grid-row: auto auto;
   grid-column-gap: 20px;
   grid-row-gap: 20px;
+
   .window {
     padding: 20px;
     margin: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border: hsl(0, 0%, 71%) 1px solid;
   }
 }
 
