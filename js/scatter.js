@@ -25,19 +25,13 @@ class ScatterPlot {
     let vis = this;
 
     // Calculate inner chart size. Margin specifies the space around the actual chart.
-    vis.width =
-      vis.config.containerWidth -
-      vis.config.margin.left -
-      vis.config.margin.right;
-    vis.height =
-      vis.config.containerHeight -
-      vis.config.margin.top -
-      vis.config.margin.bottom;
+    this.calculateSize();
 
     // Define size of SVG drawing area
     vis.svg = d3
       .select(vis.config.parentElement)
       .append("svg")
+      .attr("class", vis.config.parentElement + "-svg")
       .attr("class", "center-container")
       .attr("width", vis.config.containerWidth)
       .attr("height", vis.config.containerHeight);
@@ -51,6 +45,8 @@ class ScatterPlot {
 
     // clear the svg
     vis.svg.selectAll("*").remove();
+
+    this.calculateSize();
 
     var borderPath = vis.svg
       .append("rect")
@@ -200,13 +196,25 @@ class ScatterPlot {
 
   // //leave this empty for now...
   renderVis() {}
+  calculateSize() {
+    let vis = this;
 
+    vis.width =
+      vis.config.containerWidth -
+      vis.config.margin.left -
+      vis.config.margin.right;
+    vis.height =
+      vis.config.containerHeight -
+      vis.config.margin.top -
+      vis.config.margin.bottom;
+  }
   setAttributeLabels(attributeLabels) {
     this.attributeLabels = attributeLabels;
     this.data = cleanData(this.data, this.attributeLabels); // clean
   }
   changeAttributes(attributeLabels) {
     this.setAttributeLabels(attributeLabels);
+    //this.config.containerWidth -= 20;
     this.updateVis();
   }
 }

@@ -34,6 +34,7 @@ class Histogram {
     vis.svg = d3
       .select(vis.config.parentElement)
       .append("svg")
+      .attr("class", vis.config.parentElement + "-svg")
       .attr("class", "center-container")
       .attr("width", vis.config.containerWidth)
       .attr("height", vis.config.containerHeight);

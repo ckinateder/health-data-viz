@@ -107,7 +107,7 @@ Promise.all([
     const panelWidth = 900;
     const panelHeight = 450;
     //const colorRange = ["#0A2F51", "#BFE1B0"];
-    const colorRange = ["#FF8E98", "#1B0034"];
+    const colorRange = ["#00BEFF", "#571846"];
 
     // colored by first attribute
     chloropleth = new ChoroplethMap(

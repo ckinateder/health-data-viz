@@ -10,24 +10,38 @@
       <h1>Project 1</h1>
       <h4>Calvin Kinateder</h4>
     </div>
-    <ul class="legend">
-      <div class="legend-title">Select Attributes</div>
-      <li class="legend-li">
-        <select class="attribute-select" id="attribute-1-select"></select>
-      </li>
-      <li class="legend-li">
-        <select class="attribute-select" id="attribute-2-select"></select>
-      </li>
-      <li class="legend-li">
-        <div class="legend-controls">
-          <button id="swap-btn">Swap</button>
-          <button id="reset-btn">Reset</button>
-          <button style="display: none" id="update-btn">Update</button>
-        </div>
-      </li>
-    </ul>
 
     <div class="viz-portion">
+    
+      <ul class="legend" title="Select data from the dropdown">
+          <div class="viz-title">4-Panel Visualization</div>
+
+        <div class="legend-title">Select Attributes</div>
+        <li class="legend-li">
+          <select class="attribute-select" id="attribute-1-select"></select>
+        </li>
+        <li class="legend-li">
+          <select class="attribute-select" id="attribute-2-select"></select>
+        </li>
+        <li class="legend-li">
+          <div class="legend-controls">
+            <div class="buttons">
+              <button id="update-btn" style="display: none;" title="Refresh the views">Update</button>
+              <button id="swap-btn" title="Swap attributes">Swap</button>
+              <button id="reset-btn" title="Reset attributes to default">
+                Reset
+              </button>
+            </div>
+            <div class="sliders">
+              <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+              <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+              <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+              <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+            </div>
+
+        </li>
+      </ul>
+
       <div class="grid-container">
         <div class="choropleth window">
           <div class="tooltip" id="tooltip-choropleth"></div>

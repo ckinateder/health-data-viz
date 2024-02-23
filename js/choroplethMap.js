@@ -48,10 +48,12 @@ class ChoroplethMap {
     vis.svg = d3
       .select(vis.config.parentElement)
       .append("svg")
+      .attr("class", vis.config.parentElement + "-svg")
       .attr("class", "center-container")
       .attr("width", vis.config.containerWidth)
       .attr("height", vis.config.containerHeight);
 
+    // is this necessary
     vis.svg
       .append("rect")
       .attr("class", "background center-container")
@@ -142,7 +144,10 @@ class ChoroplethMap {
       .interpolate(d3.interpolateHcl);
 
     vis.counties.attr("fill", (d) => {
-      if (d.properties[this.attributeLabels[0]]) {
+      if (
+        d.properties[this.attributeLabels[0]] !== undefined &&
+        d.properties[this.attributeLabels[0]] !== -1
+      ) {
         return vis.colorScale(d.properties[this.attributeLabels[0]]);
       } else {
         return "url(#lightstripe)";

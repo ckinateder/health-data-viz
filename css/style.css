@@ -30,31 +30,6 @@
   fill: orange;
 }
 
-.legend {
-  border: hsl(0, 0%, 71%) 1px solid;
-  margin: 20px 5px;
-  padding: 10px;
-  list-style: none;
-  width: fit-content;
-  .legend-title {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 5px;
-  }
-  .legend-li {
-    padding: 2px 0px;
-    cursor: pointer;
-    transition: all ease-in-out 200ms;
-  }
-  .legend-controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    list-style: none;
-    margin-top: 5px;
-  }
-}
-
 .tooltip {
   position: absolute;
   display: none;
@@ -79,10 +54,64 @@
   border: hsl(0, 0%, 71%) 1px solid;
   width: fit-content;
   height: fit-content;
+  display: none;
+}
+
+.legend {
+  border: hsl(0, 0%, 71%) 1px solid;
+  margin: 5px 5px;
+  padding: 10px;
+  list-style: none;
+  width: fit-content;
+  height: auto;
+  .legend-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  .legend-li {
+    padding: 2px 0px;
+    cursor: pointer;
+    transition: all ease-in-out 200ms;
+  }
+  .legend-controls {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+  }
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .sliders {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: center;
+    margin-top: 5px;
+    display: none;
+  }
+  .viz-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+}
+
+.viz-portion {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  height: fit-content;
+  margin: 20px 5px;
+  padding: 10px 0px 10px 10px;
+  border: hsl(0, 0%, 71%) 1px solid;
 }
 
 .grid-container {
-  margin: auto 0px;
+  margin: auto 10px;
   width: fit-content;
   height: auto;
   display: grid;
