@@ -144,7 +144,7 @@ class ScatterPlot {
         d3.select(vis.config.tooltipTag).style("display", "none");
         d3.select(event.target)
           .transition()
-          .duration(250)
+          .duration(150)
           .attr("r", 2)
           .attr("fill", (d) =>
             vis.colorScale(d.properties[this.attributeLabels[0]])

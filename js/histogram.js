@@ -132,7 +132,7 @@ class Histogram {
         d3.select(vis.config.tooltipTag).style("display", "none");
         d3.select(event.currentTarget)
           .transition()
-          .duration(250)
+          .duration(150)
           .style("fill", (d) => vis.colorScale(d.length));
       });
 

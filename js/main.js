@@ -9,6 +9,7 @@ let allData,
   histogram2,
   attributeLabels,
   defaultAttributeLabels,
+  defaultHistogramBins,
   defaultColorRange,
   colorRange;
 
@@ -97,6 +98,7 @@ Promise.all([
     // default attributes
     defaultAttributeLabels = ["median_household_income", "percent_stroke"];
     defaultColorRange = ["#00BEFF", "#571846"];
+    defaultHistogramBins = 40;
 
     attributeLabels = defaultAttributeLabels;
     colorRange = defaultColorRange;
@@ -104,6 +106,10 @@ Promise.all([
     // set #attribute-1-select and #attribute-2-select to default attributes
     d3.select("#attribute-1-select").property("value", attributeLabels[0]);
     d3.select("#attribute-2-select").property("value", attributeLabels[1]);
+    d3.select("#colorpicker-1").property("value", colorRange[0]);
+    d3.select("#colorpicker-2").property("value", colorRange[1]);
+    d3.select("#histogram-1-bins").property("value", defaultHistogramBins);
+    d3.select("#histogram-2-bins").property("value", defaultHistogramBins);
 
     const panelWidth = 800;
     const panelHeight = 475;
@@ -178,6 +184,11 @@ d3.select("#reset-btn").on("click", () => {
   d3.select("#attribute-2-select").property("value", defaultAttributeLabels[1]);
   d3.select("#colorpicker-1").property("value", defaultColorRange[0]);
   d3.select("#colorpicker-2").property("value", defaultColorRange[1]);
+  d3.select("#histogram-1-bins").property("value", defaultHistogramBins);
+  d3.select("#histogram-2-bins").property("value", defaultHistogramBins);
+  histogram1.config.numBins = d3.select("#histogram-1-bins").property("value");
+  histogram2.config.numBins = d3.select("#histogram-2-bins").property("value");
+
   updateDropdown();
   updateColor();
   updateButton();
@@ -196,6 +207,15 @@ d3.select("#colorpicker-1").on("change", () => {
 });
 d3.select("#colorpicker-2").on("change", () => {
   updateButton();
+});
+d3.select("#histogram-1-bins").on("change", () => {
+  histogram1.config.numBins = d3.select("#histogram-1-bins").property("value");
+  histogram1.updateVis();
+});
+
+d3.select("#histogram-2-bins").on("change", () => {
+  histogram2.config.numBins = d3.select("#histogram-2-bins").property("value");
+  histogram2.updateVis();
 });
 
 function updateColor() {
