@@ -18,11 +18,6 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <div class="info">
-      <h1>Project 1</h1>
-      <h4>Calvin Kinateder</h4>
-    </div>
-
     <div class="viz-portion">
       <div class="legend" title="Select data from the dropdown">
         <div class="viz-title">4-Panel Visualization</div>
@@ -33,15 +28,23 @@
             <select
               class="legend-controls-element attribute-select"
               id="attribute-1-select"
+              value="Select an attribute"
             ></select>
             <select
               class="legend-controls-element attribute-select"
               id="attribute-2-select"
+              value="Select an attribute"
             ></select>
           </div>
         </div>
         <div class="legend-controls buttons">
-          <button id="update-btn" title="Refresh the views">Update</button>
+          <button
+            id="update-btn"
+            title="Refresh the views"
+            style="display: none"
+          >
+            Update
+          </button>
           <button id="swap-btn" title="Swap attributes">Swap</button>
           <button id="reset-btn" title="Reset attributes to default">
             Reset All
@@ -71,41 +74,13 @@
               High Color</span
             >
           </div>
-          <div class="sliders">
-            <input
-              type="range"
-              min="1"
-              max="100"
-              value="50"
-              class="slider"
-              id="myRange"
-            />
-            <input
-              type="range"
-              min="1"
-              max="100"
-              value="50"
-              class="slider"
-              id="myRange"
-            />
-            <input
-              type="range"
-              min="1"
-              max="100"
-              value="50"
-              class="slider"
-              id="myRange"
-            />
-            <input
-              type="range"
-              min="1"
-              max="100"
-              value="50"
-              class="slider"
-              id="myRange"
-            />
-          </div>
         </div>
+        <span style="font-size: 12px; margin-top: 15px">
+          <strong>Todo:</strong>
+          <br />
+          - add a legend for the choropleth map<br />
+          - make scatterplot single color
+        </span>
       </div>
 
       <div class="grid-container">

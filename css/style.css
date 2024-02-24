@@ -47,16 +47,6 @@
     font-weight: 600;
   }
 }
-.info {
-  padding: 0px 10px;
-  margin: 5px;
-  font: 12px/14px Arial, sans-serif;
-  border: hsl(0, 0%, 71%) 1px solid;
-  width: fit-content;
-  height: fit-content;
-  display: none;
-}
-
 .legend {
   border: hsl(0, 0%, 71%) 1px solid;
   margin: 5px 5px;
@@ -86,7 +76,9 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    font-size: 14px;
+  }
+  .attribute-select {
+    font-size: 12px;
   }
   .buttons {
     display: flex;
@@ -104,8 +96,8 @@
     flex-direction: column;
     align-items: left;
     justify-content: center;
-    margin-top: 5px;
-    display: none;
+    margin-top: 10px;
+    font-size: 14px;
   }
   .viz-title {
     font-size: 20px;
@@ -119,7 +111,6 @@
   flex-direction: row;
   width: fit-content;
   height: fit-content;
-  margin: 20px 5px;
   padding: 5px 0px 5px 5px;
   border: hsl(0, 0%, 71%) 1px solid;
 }

@@ -48,6 +48,7 @@ class Histogram {
     // clear the svg
     vis.svg.selectAll("*").remove();
 
+    /*
     var borderPath = vis.svg
       .append("rect")
       .attr("x", 0)
@@ -57,6 +58,8 @@ class Histogram {
       .style("stroke", "#999999")
       .style("fill", "none")
       .style("stroke-width", "1");
+    */
+
     // Extract the values from the data
     const values = vis.data.map((d) => d.properties[vis.attributeLabel]);
 

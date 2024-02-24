@@ -48,6 +48,7 @@ class ScatterPlot {
 
     this.calculateSize();
 
+    /*
     var borderPath = vis.svg
       .append("rect")
       .attr("x", 0)
@@ -57,7 +58,7 @@ class ScatterPlot {
       .style("stroke", "#999999")
       .style("fill", "none")
       .style("stroke-width", "1");
-
+    */
     vis.xScale = d3
       .scaleLinear()
       .domain([

@@ -9,12 +9,8 @@ class ChoroplethMap {
       parentElement: _config.parentElement,
       containerWidth: _config.containerWidth || 1000,
       containerHeight: _config.containerHeight || 650,
-      margin: _config.margin || { top: 20, right: 20, bottom: 20, left: 20 },
+      margin: _config.margin || { top: 30, right: 0, bottom: 50, left: 0 },
       tooltipPadding: 10,
-      legendBottom: 50,
-      legendLeft: 50,
-      legendRectHeight: 12,
-      legendRectWidth: 150,
       tooltipTag: _config.tooltipTag || "#tooltip-choropleth",
       colorRange: _config.colorRange || ["#0A2F51", "#BFE1B0"],
     };
@@ -61,6 +57,7 @@ class ChoroplethMap {
       .attr("width", vis.config.containerHeight) //width + margin.left + margin.right)
       .on("click", vis.clicked);
 
+    /*
     var borderPath = vis.svg
       .append("rect")
       .attr("x", 0)
@@ -70,6 +67,7 @@ class ChoroplethMap {
       .style("stroke", "#999999")
       .style("fill", "none")
       .style("stroke-width", "1");
+    */
 
     vis.projection = d3
       .geoAlbersUsa()
@@ -132,6 +130,8 @@ class ChoroplethMap {
   updateVis() {
     let vis = this;
 
+    vis.svg.selectAll("text").remove();
+
     vis.colorScale = d3
       .scaleLinear()
       .domain(
@@ -192,6 +192,20 @@ class ChoroplethMap {
             }
           });
       });
+
+    // Add X axis label:
+    vis.svg
+      .append("text")
+      .attr("text-anchor", "middle")
+      .attr("font-size", "12px")
+      .attr("font-weight", 500)
+      .attr(
+        "transform",
+        `translate(${vis.width / 2}, ${
+          vis.height + vis.config.margin.bottom + 15
+        })`
+      )
+      .text("Counties colored by " + this.attributeLabels[0]);
 
     this.renderVis();
   }

@@ -95,10 +95,7 @@ Promise.all([
       .text((d) => d);
 
     // default attributes
-    defaultAttributeLabels = [
-      "median_household_income",
-      "percent_coronary_heart_disease",
-    ];
+    defaultAttributeLabels = ["median_household_income", "percent_stroke"];
     defaultColorRange = ["#00BEFF", "#571846"];
 
     attributeLabels = defaultAttributeLabels;
@@ -108,8 +105,8 @@ Promise.all([
     d3.select("#attribute-1-select").property("value", attributeLabels[0]);
     d3.select("#attribute-2-select").property("value", attributeLabels[1]);
 
-    const panelWidth = 900;
-    const panelHeight = 450;
+    const panelWidth = 800;
+    const panelHeight = 475;
     //const colorRange = ["#386C30", "#04F11B"];
 
     // colored by first attribute
