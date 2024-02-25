@@ -18,107 +18,126 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <div class="viz-portion">
-      <div class="legend" title="Select data from the dropdown">
-        <div class="viz-title">4-Panel Visualization</div>
+    <div class="all-container">
+      <div class="viz-portion">
+        <div class="legend">
+          <div class="viz-title">4-Panel Visualization</div>
 
-        <div class="legend-title">Select Attributes</div>
-        <div class="legend-controls">
-          <div class="dropdowns">
-            <select
-              class="legend-controls-element attribute-select"
-              id="attribute-1-select"
-              value="Select an attribute"
-            ></select>
-            <select
-              class="legend-controls-element attribute-select"
-              id="attribute-2-select"
-              value="Select an attribute"
-            ></select>
+          <div class="legend-title" title="Select data from the dropdown">
+            Select Attributes
           </div>
-        </div>
-        <div class="legend-controls buttons">
-          <button
-            id="update-btn"
-            title="Refresh the views"
-            style="display: none"
+          <div class="legend-controls">
+            <div class="dropdowns">
+              <select
+                class="legend-controls-element attribute-select"
+                id="attribute-1-select"
+                value="Select an attribute"
+              ></select>
+              <select
+                class="legend-controls-element attribute-select"
+                id="attribute-2-select"
+                value="Select an attribute"
+              ></select>
+            </div>
+          </div>
+          <div class="legend-controls buttons">
+            <button
+              id="update-btn"
+              title="Refresh the views"
+              style="display: none"
+            >
+              Update
+            </button>
+            <button id="swap-btn" title="Swap attributes">Swap</button>
+            <button id="reset-btn" title="Reset attributes to default">
+              Reset All
+            </button>
+          </div>
+          <div class="legend-title" id="additional-controls-title">
+            Additional Controls
+          </div>
+          <div
+            class="legend-controls"
+            id="additional-controls"
+            title="Select color scale"
           >
-            Update
-          </button>
-          <button id="swap-btn" title="Swap attributes">Swap</button>
-          <button id="reset-btn" title="Reset attributes to default">
-            Reset All
-          </button>
-        </div>
-        <div class="legend-title" id="additional-controls-title">
-          Additional Controls
-        </div>
-        <div class="legend-controls" id="additional-controls">
-          <div class="pickers">
-            <span
-              ><input
-                type="color"
-                id="colorpicker-1"
+            <div class="pickers">
+              <span
+                ><input
+                  type="color"
+                  id="colorpicker-1"
+                  class="legend-controls-element"
+                  value="#00BEFF"
+                />
+                Low Color</span
+              >
+              <span
+                ><input
+                  type="color"
+                  id="colorpicker-2"
+                  class="legend-controls-element"
+                  value="#571846"
+                />
+                High Color</span
+              >
+            </div>
+            <div class="pickers" title="Control histogram bin count">
+              <label> Histogram 1 Bins</label>
+              <input
+                type="range"
+                min="0"
+                max="80"
+                step="1"
+                value="40"
+                id="histogram-1-bins"
                 class="legend-controls-element"
-                value="#00BEFF"
               />
-              Low Color</span
-            >
-            <span
-              ><input
-                type="color"
-                id="colorpicker-2"
+              <label> Histogram 2 Bins</label>
+              <input
+                type="range"
+                min="0"
+                max="80"
+                step="1"
+                value="40"
+                id="histogram-2-bins"
                 class="legend-controls-element"
-                value="#571846"
               />
-              High Color</span
-            >
+            </div>
           </div>
-          <div class="pickers">
-            <label> Histogram 1 Bins</label>
-            <input
-              type="range"
-              min="0"
-              max="80"
-              step="1"
-              value="40"
-              id="histogram-1-bins"
-              class="legend-controls-element"
-            />
-            <label> Histogram 2 Bins</label>
-            <input
-              type="range"
-              min="0"
-              max="80"
-              step="1"
-              value="40"
-              id="histogram-2-bins"
-              class="legend-controls-element"
-            />
+          <span style="font-size: 12px; margin-top: 15px">
+            <strong>Todo:</strong>
+            <br />
+            - add a legend for the choropleth map<br />
+            - make scatterplot single color
+          </span>
+        </div>
+
+        <div class="grid-container">
+          <div class="choropleth window">
+            <div class="tooltip" id="tooltip-choropleth"></div>
+          </div>
+          <div class="scatterplot window">
+            <div class="tooltip" id="tooltip-scatter"></div>
+          </div>
+          <div class="histogram1 window">
+            <div class="tooltip" id="tooltip-hist-1"></div>
+          </div>
+          <div class="histogram2 window">
+            <div class="tooltip" id="tooltip-hist-2"></div>
           </div>
         </div>
-        <span style="font-size: 12px; margin-top: 15px">
-          <strong>Todo:</strong>
-          <br />
-          - add a legend for the choropleth map<br />
-          - make scatterplot single color
-        </span>
       </div>
 
-      <div class="grid-container">
-        <div class="choropleth window">
-          <div class="tooltip" id="tooltip-choropleth"></div>
-        </div>
-        <div class="scatterplot window">
-          <div class="tooltip" id="tooltip-scatter"></div>
-        </div>
-        <div class="histogram1 window">
-          <div class="tooltip" id="tooltip-hist-1"></div>
-        </div>
-        <div class="histogram2 window">
-          <div class="tooltip" id="tooltip-hist-2"></div>
-        </div>
-      </div>
+      <footer class="footer">
+        <span class="credits" id="me">
+          <a href="https://calvinkinateder.com">Calvin Kinateder, 2024</a>
+        </span>
+        <span class="credits" id="cdc">
+          <a href="https://www.cdc.gov/dhdsp/maps/atlas/index.htm">
+            Data from CDC Heart Disease and Stroke Maps
+          </a>
+        </span>
+      </footer>
     </div>
 
     <svg height="5" width="5" xmlns="http://www.w3.org/2000/svg" version="1.1">

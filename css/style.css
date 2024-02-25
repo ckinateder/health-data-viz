@@ -136,6 +136,24 @@
   }
 }
 
+.all-container {
+  width: fit-content;
+}
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .credits {
+    font-size: 12px;
+    font-weight: 500;
+    margin: 10px 5px;
+    color: #333;
+    a {
+      color: #333;
+    }
+  }
+}
+
 * {
   font-family: "Kode Mono", monospace;
   font-optical-sizing: auto;
