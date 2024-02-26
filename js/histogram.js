@@ -78,7 +78,10 @@ class Histogram {
     vis.bins = vis.histogram(values);
 
     // add all bins to the attributeRanges for filtering on update
-    if (attributeRanges[vis.attributeLabel].length === 0) {
+    if (
+      attributeRanges[vis.attributeLabel] === undefined ||
+      attributeRanges[vis.attributeLabel].length === 0
+    ) {
       attributeRanges[vis.attributeLabel] = vis.bins.map((d) => [d.x0, d.x1]);
     }
 
