@@ -9,6 +9,8 @@ class Histogram {
       tooltipPadding: 10,
       tooltipTag: _config.tooltipTag || "#tooltip-histogram",
       colorRange: _config.colorRange || ["#0A2F51", "#BFE1B0"],
+      disabledOpacity: 0.3,
+      enabledOpacity: 1,
     };
 
     this.data = _data.objects.counties.geometries;
@@ -72,7 +74,13 @@ class Histogram {
       .histogram()
       .domain(vis.xScale.domain())
       .thresholds(vis.xScale.ticks(vis.config.numBins));
+
     vis.bins = vis.histogram(values);
+
+    // add all bins to the attributeRanges for filtering on update
+    if (attributeRanges[vis.attributeLabel].length === 0) {
+      attributeRanges[vis.attributeLabel] = vis.bins.map((d) => [d.x0, d.x1]);
+    }
 
     vis.yScale = d3
       .scaleLinear()
@@ -109,7 +117,8 @@ class Histogram {
         return r < 0 ? 0 : r; // if the width is negative, set it to 0
       })
       .attr("height", (d) => vis.height - vis.yScale(d.length))
-      .attr("fill", (d) => vis.colorScale(d.length));
+      .attr("fill", (d) => vis.colorScale(d.length))
+      .attr("opacity", vis.config.enabledOpacity);
 
     vis.rects
       .on("mousemove", (event, d) => {
@@ -134,6 +143,44 @@ class Histogram {
           .transition()
           .duration(150)
           .style("fill", (d) => vis.colorScale(d.length));
+      })
+      .on("click", (event, d) => {
+        // set active if not already active, otherwise reset
+
+        let range = [d.x0, d.x1];
+
+        if (includesArray(attributeRanges[vis.attributeLabel], range)) {
+          // set opacity
+          d3.select(event.currentTarget).attr(
+            "opacity",
+            vis.config.disabledOpacity
+          );
+          attributeRanges[vis.attributeLabel] = removeArrayFromArray(
+            attributeRanges[vis.attributeLabel],
+            range
+          );
+          console.log(attributeRanges);
+        } else {
+          d3.select(event.currentTarget).attr(
+            "opacity",
+            vis.config.enabledOpacity
+          );
+          attributeRanges[vis.attributeLabel].push(range);
+        }
+
+        let expression = (d) => {
+          for (let i = 0; i < attributeRanges[vis.attributeLabel].length; i++) {
+            if (
+              d >= attributeRanges[vis.attributeLabel][i][0] &&
+              d <= attributeRanges[vis.attributeLabel][i][1]
+            ) {
+              return true;
+            }
+          }
+          return false;
+        };
+
+        updateScatterplotData();
       });
 
     vis.xAxis = d3.axisBottom(vis.xScale);

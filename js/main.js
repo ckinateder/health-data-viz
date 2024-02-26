@@ -13,6 +13,8 @@ let allData,
   defaultColorRange,
   colorRange;
 
+let attributeRanges;
+
 Promise.all([
   d3.json("data/counties-10m.json"),
   d3.csv("data/population.csv"),
@@ -103,6 +105,11 @@ Promise.all([
     attributeLabels = defaultAttributeLabels;
     colorRange = defaultColorRange;
 
+    attributeRanges = {
+      [attributeLabels[0]]: [],
+      [attributeLabels[1]]: [],
+    };
+
     // set #attribute-1-select and #attribute-2-select to default attributes
     d3.select("#attribute-1-select").property("value", attributeLabels[0]);
     d3.select("#attribute-2-select").property("value", attributeLabels[1]);
@@ -166,6 +173,48 @@ Promise.all([
   })
   .catch((error) => console.error(error));
 
+/** Example:
+ * filterData(
+    testdata,
+    "median_household_income",
+    (d) => d > 50000 && d < 52000
+  );
+*/
+
+function buildExpression(attributeLabel1, attributeLabel2) {
+  // given a list of ranges, build an expression that returns true if the value is in any of the ranges
+  return (expression = (d) => {
+    for (let i = 0; i < attributeRanges[attributeLabel1].length; i++) {
+      if (
+        d.properties[attributeLabel1] >=
+          attributeRanges[attributeLabel1][i][0] &&
+        d.properties[attributeLabel1] <= attributeRanges[attributeLabel1][i][1]
+      ) {
+        for (let j = 0; j < attributeRanges[attributeLabel2].length; j++) {
+          if (
+            d.properties[attributeLabel2] >=
+              attributeRanges[attributeLabel2][j][0] &&
+            d.properties[attributeLabel2] <=
+              attributeRanges[attributeLabel2][j][1]
+          ) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  });
+}
+
+function updateScatterplotData() {
+  // make data equal to the original data filtered by the ranges in attributeRanges for both attributes
+  let data = allData.objects.counties.geometries.filter(
+    buildExpression(attributeLabels[0], attributeLabels[1])
+  );
+  scatterplot.setData(data);
+  scatterplot.updateVis();
+}
+
 // swap the attributes with swap button
 d3.select("#swap-btn").on("click", () => {
   let attribute1 = d3.select("#attribute-1-select").property("value");
@@ -180,6 +229,10 @@ d3.select("#update-btn").on("click", () => {
 });
 
 d3.select("#reset-btn").on("click", () => {
+  resetAll();
+});
+
+function resetAll() {
   d3.select("#attribute-1-select").property("value", defaultAttributeLabels[0]);
   d3.select("#attribute-2-select").property("value", defaultAttributeLabels[1]);
   d3.select("#colorpicker-1").property("value", defaultColorRange[0]);
@@ -189,10 +242,16 @@ d3.select("#reset-btn").on("click", () => {
   histogram1.config.numBins = d3.select("#histogram-1-bins").property("value");
   histogram2.config.numBins = d3.select("#histogram-2-bins").property("value");
 
+  attributeRanges = {
+    [defaultAttributeLabels[0]]: [],
+    [defaultAttributeLabels[1]]: [],
+  };
+
   updateDropdown();
   updateColor();
   updateButton();
-});
+  updateScatterplotData();
+}
 
 // automataically update the attributes when the dropdown is changed
 d3.select("#attribute-1-select").on("change", () => {

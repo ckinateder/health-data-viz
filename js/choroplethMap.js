@@ -57,18 +57,6 @@ class ChoroplethMap {
       .attr("width", vis.config.containerHeight) //width + margin.left + margin.right)
       .on("click", vis.clicked);
 
-    /*
-    var borderPath = vis.svg
-      .append("rect")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("height", vis.config.containerHeight)
-      .attr("width", vis.config.containerWidth)
-      .style("stroke", "#999999")
-      .style("fill", "none")
-      .style("stroke-width", "1");
-    */
-
     vis.projection = d3
       .geoAlbersUsa()
       .translate([vis.width / 2, vis.height / 2])
@@ -221,5 +209,10 @@ class ChoroplethMap {
   }
   changeColorRange(colorRange) {
     this.config.colorRange = colorRange;
+  }
+
+  setData(data) {
+    this.data = data;
+    // scatterplot.updateVis();
   }
 }
