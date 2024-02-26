@@ -208,7 +208,6 @@ class ScatterPlot {
   setData(data) {
     this.data = data;
     this.data = cleanData(this.data, this.attributeLabels); // clean
-    // scatterplot.updateVis();
   }
 
   changeAttributes(attributeLabels) {

@@ -239,14 +239,13 @@ function resetAll() {
   d3.select("#colorpicker-2").property("value", defaultColorRange[1]);
   d3.select("#histogram-1-bins").property("value", defaultHistogramBins);
   d3.select("#histogram-2-bins").property("value", defaultHistogramBins);
-  histogram1.config.numBins = d3.select("#histogram-1-bins").property("value");
-  histogram2.config.numBins = d3.select("#histogram-2-bins").property("value");
+  histogram1.changeNumBins(defaultHistogramBins);
+  histogram2.changeNumBins(defaultHistogramBins);
 
   attributeRanges = {
     [defaultAttributeLabels[0]]: [],
     [defaultAttributeLabels[1]]: [],
   };
-
   updateDropdown();
   updateColor();
   updateButton();
@@ -268,12 +267,12 @@ d3.select("#colorpicker-2").on("change", () => {
   updateButton();
 });
 d3.select("#histogram-1-bins").on("change", () => {
-  histogram1.config.numBins = d3.select("#histogram-1-bins").property("value");
+  histogram1.changeNumBins(d3.select("#histogram-1-bins").property("value"));
   histogram1.updateVis();
 });
 
 d3.select("#histogram-2-bins").on("change", () => {
-  histogram2.config.numBins = d3.select("#histogram-2-bins").property("value");
+  histogram2.changeNumBins(d3.select("#histogram-2-bins").property("value"));
   histogram2.updateVis();
 });
 

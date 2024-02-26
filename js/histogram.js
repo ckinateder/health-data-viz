@@ -146,7 +146,6 @@ class Histogram {
       })
       .on("click", (event, d) => {
         // set active if not already active, otherwise reset
-
         let range = [d.x0, d.x1];
 
         if (includesArray(attributeRanges[vis.attributeLabel], range)) {
@@ -167,19 +166,6 @@ class Histogram {
           );
           attributeRanges[vis.attributeLabel].push(range);
         }
-
-        let expression = (d) => {
-          for (let i = 0; i < attributeRanges[vis.attributeLabel].length; i++) {
-            if (
-              d >= attributeRanges[vis.attributeLabel][i][0] &&
-              d <= attributeRanges[vis.attributeLabel][i][1]
-            ) {
-              return true;
-            }
-          }
-          return false;
-        };
-
         updateScatterplotData();
       });
 
@@ -242,5 +228,10 @@ class Histogram {
 
   changeColorRange(colorRange) {
     this.config.colorRange = colorRange;
+  }
+
+  changeNumBins(numBins) {
+    this.config.numBins = numBins;
+    attributeRanges[this.attributeLabel] = []; // reset the attributeRanges
   }
 }
