@@ -96,7 +96,8 @@ class ScatterPlot {
         } else {
           return vis.midColor;
         }
-      });
+      })
+      .classed("active", (d) => this.expression(d));
 
     vis.dots
       .on("mousemove", (event, d) => {
@@ -141,7 +142,13 @@ class ScatterPlot {
           .transition()
           .duration(150)
           .attr("r", 2)
-          .attr("fill", (d) => vis.midColor)
+          .attr("fill", (d) => {
+            if (this.expression(d)) {
+              return "orange";
+            } else {
+              return vis.midColor;
+            }
+          })
           .attr("opacity", 0.8);
       });
 
