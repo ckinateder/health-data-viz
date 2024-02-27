@@ -9,6 +9,8 @@ class ScatterPlot {
       dot_color: "#0d003b",
       tooltipTag: _config.tooltipTag || "#tooltip-scatter",
       colorRange: _config.colorRange || ["#0A2F51", "#BFE1B0"],
+      disabledOpacity: 0.3,
+      enabledOpacity: 1,
     };
 
     this.data = _data.objects.counties.geometries;
@@ -16,7 +18,9 @@ class ScatterPlot {
 
     this.active = d3.select(null);
     this.attributeLabels = _attributeLabels; // array of 2 attributes
-
+    this.setExpression((d) => {
+      return false;
+    }); // default expression
     // Call a class function
     this.initVis();
   }
@@ -70,13 +74,11 @@ class ScatterPlot {
         "transform",
         `translate(${vis.config.margin.left}, ${vis.config.margin.top})`
       );
-    vis.colorScale = d3
-      .scaleLinear()
-      .domain(
-        d3.extent(this.data, (d) => d.properties[this.attributeLabels[0]])
-      )
-      .range(this.config.colorRange)
-      .interpolate(d3.interpolateHcl);
+
+    vis.midColor = d3.interpolateHcl(
+      this.config.colorRange[0],
+      this.config.colorRange[1]
+    )(0.5);
 
     // translate these better
     vis.dots = vis.chart
@@ -88,9 +90,13 @@ class ScatterPlot {
       .attr("cy", (d) => vis.yScale(d.properties[this.attributeLabels[1]]))
       .attr("r", 2)
       .attr("opacity", 0.8)
-      .attr("fill", (d) =>
-        vis.colorScale(d.properties[this.attributeLabels[0]])
-      );
+      .attr("fill", (d) => {
+        if (this.expression(d)) {
+          return "orange";
+        } else {
+          return vis.midColor;
+        }
+      });
 
     vis.dots
       .on("mousemove", (event, d) => {
@@ -135,9 +141,7 @@ class ScatterPlot {
           .transition()
           .duration(150)
           .attr("r", 2)
-          .attr("fill", (d) =>
-            vis.colorScale(d.properties[this.attributeLabels[0]])
-          )
+          .attr("fill", (d) => vis.midColor)
           .attr("opacity", 0.8);
       });
 
@@ -208,6 +212,11 @@ class ScatterPlot {
   setData(data) {
     this.data = data;
     this.data = cleanData(this.data, this.attributeLabels); // clean
+  }
+
+  setExpression(expression) {
+    this.expression = expression;
+    console.log(expression);
   }
 
   changeAttributes(attributeLabels) {

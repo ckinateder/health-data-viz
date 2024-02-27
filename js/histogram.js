@@ -50,17 +50,9 @@ class Histogram {
     // clear the svg
     vis.svg.selectAll("*").remove();
 
-    /*
-    var borderPath = vis.svg
-      .append("rect")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("height", vis.config.containerHeight)
-      .attr("width", vis.config.containerWidth)
-      .style("stroke", "#999999")
-      .style("fill", "none")
-      .style("stroke-width", "1");
-    */
+    if (attributeRanges[vis.attributeLabel] === undefined) {
+      attributeRanges[vis.attributeLabel] = [];
+    }
 
     // Extract the values from the data
     const values = vis.data.map((d) => d.properties[vis.attributeLabel]);
@@ -78,12 +70,6 @@ class Histogram {
     vis.bins = vis.histogram(values);
 
     // add all bins to the attributeRanges for filtering on update
-    if (
-      attributeRanges[vis.attributeLabel] === undefined ||
-      attributeRanges[vis.attributeLabel].length === 0
-    ) {
-      attributeRanges[vis.attributeLabel] = vis.bins.map((d) => [d.x0, d.x1]);
-    }
 
     vis.yScale = d3
       .scaleLinear()
@@ -142,33 +128,33 @@ class Histogram {
       })
       .on("mouseout", (event, d) => {
         d3.select(vis.config.tooltipTag).style("display", "none");
-        d3.select(event.currentTarget)
-          .transition()
-          .duration(150)
-          .style("fill", (d) => vis.colorScale(d.length));
+        if (!d3.select(event.currentTarget).classed("active")) {
+          d3.select(event.currentTarget)
+            .transition()
+            .duration(150)
+            .style("fill", (d) => vis.colorScale(d.length));
+        }
       })
       .on("click", (event, d) => {
-        // set active if not already active, otherwise reset
+        // if the array is empty or the attribute is not in the array
         let range = [d.x0, d.x1];
 
         if (includesArray(attributeRanges[vis.attributeLabel], range)) {
-          // set opacity
-          d3.select(event.currentTarget).attr(
-            "opacity",
-            vis.config.disabledOpacity
-          );
+          d3.select(event.currentTarget)
+            .attr("fill", (d) => vis.colorScale(d.length))
+            .classed("active", false);
           attributeRanges[vis.attributeLabel] = removeArrayFromArray(
             attributeRanges[vis.attributeLabel],
             range
           );
-          console.log(attributeRanges);
         } else {
-          d3.select(event.currentTarget).attr(
-            "opacity",
-            vis.config.enabledOpacity
-          );
+          d3.select(event.currentTarget)
+            .attr("fill", "orange")
+            .classed("active", true);
+
           attributeRanges[vis.attributeLabel].push(range);
         }
+
         updateScatterplotData();
       });
 
