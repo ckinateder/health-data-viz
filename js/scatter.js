@@ -8,7 +8,6 @@ class ScatterPlot {
       tooltipPadding: 10,
       dot_color: "#0d003b",
       tooltipTag: _config.tooltipTag || "#tooltip-scatter",
-      colorRange: _config.colorRange || ["#0A2F51", "#BFE1B0"],
       disabledOpacity: 0.3,
       enabledOpacity: 1,
     };
@@ -75,10 +74,7 @@ class ScatterPlot {
         `translate(${vis.config.margin.left}, ${vis.config.margin.top})`
       );
 
-    vis.midColor = d3.interpolateHcl(
-      this.config.colorRange[0],
-      this.config.colorRange[1]
-    )(0.5);
+    vis.midColor = d3.interpolateHcl(colorRange[0], colorRange[1])(0.5);
 
     // translate these better
     vis.dots = vis.chart
@@ -229,6 +225,6 @@ class ScatterPlot {
     this.setAttributeLabels(attributeLabels);
   }
   changeColorRange(colorRange) {
-    this.config.colorRange = colorRange;
+    colorRange = colorRange;
   }
 }

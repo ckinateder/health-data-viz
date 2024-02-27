@@ -8,7 +8,6 @@ class Histogram {
       numBins: _config.numBins || 40,
       tooltipPadding: 10,
       tooltipTag: _config.tooltipTag || "#tooltip-histogram",
-      colorRange: _config.colorRange || ["#0A2F51", "#BFE1B0"],
       disabledOpacity: 0.3,
       enabledOpacity: 1,
     };
@@ -86,7 +85,7 @@ class Histogram {
     vis.colorScale = d3
       .scaleLinear()
       .domain([0, d3.max(vis.bins, (d) => d.length)])
-      .range(vis.config.colorRange)
+      .range(colorRange)
       .interpolate(d3.interpolateHcl);
 
     // append the bar rectangles to the svg element
@@ -217,7 +216,7 @@ class Histogram {
   }
 
   changeColorRange(colorRange) {
-    this.config.colorRange = colorRange;
+    colorRange = colorRange;
   }
 
   changeNumBins(numBins) {

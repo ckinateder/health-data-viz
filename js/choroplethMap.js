@@ -12,7 +12,6 @@ class ChoroplethMap {
       margin: _config.margin || { top: 30, right: 0, bottom: 50, left: 0 },
       tooltipPadding: 10,
       tooltipTag: _config.tooltipTag || "#tooltip-choropleth",
-      colorRange: _config.colorRange || ["#0A2F51", "#BFE1B0"],
     };
     this.data = _data;
     // this.config = _config;
@@ -72,7 +71,7 @@ class ChoroplethMap {
           (d) => d.properties[this.attributeLabels[0]]
         )
       )
-      .range(this.config.colorRange)
+      .range(colorRange)
       .interpolate(d3.interpolateHcl);
 
     vis.path = d3.geoPath().projection(vis.projection);
@@ -130,7 +129,7 @@ class ChoroplethMap {
           (d) => d.properties[this.attributeLabels[0]]
         )
       )
-      .range(vis.config.colorRange)
+      .range(colorRange)
       .interpolate(d3.interpolateHcl);
 
     vis.counties.attr("fill", (d) => {
@@ -182,8 +181,15 @@ class ChoroplethMap {
           .transition()
           .duration(250)
           .attr("fill", (d) => {
-            if (d.properties[this.attributeLabels[0]]) {
-              return vis.colorScale(d.properties[this.attributeLabels[0]]);
+            if (
+              d.properties[this.attributeLabels[0]] !== undefined &&
+              d.properties[this.attributeLabels[0]] !== -1
+            ) {
+              if (this.expression(d)) {
+                return accentColor;
+              } else {
+                return vis.colorScale(d.properties[this.attributeLabels[0]]);
+              }
             } else {
               return "url(#lightstripe)";
             }
@@ -216,7 +222,7 @@ class ChoroplethMap {
     this.setAttributeLabels(attributeLabels);
   }
   changeColorRange(colorRange) {
-    this.config.colorRange = colorRange;
+    colorRange = colorRange;
   }
 
   setData(data) {

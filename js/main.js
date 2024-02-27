@@ -133,7 +133,6 @@ Promise.all([
         containerWidth: panelWidth,
         containerHeight: panelHeight,
         tooltipTag: "#tooltip-choropleth",
-        colorRange: colorRange,
       },
       allData,
       attributeLabels
@@ -145,7 +144,6 @@ Promise.all([
         containerWidth: panelWidth,
         containerHeight: panelHeight,
         tooltipTag: "#tooltip-scatter",
-        colorRange: colorRange,
       },
       allData,
       attributeLabels
@@ -157,7 +155,6 @@ Promise.all([
         containerWidth: panelWidth,
         containerHeight: panelHeight,
         tooltipTag: "#tooltip-hist-1",
-        colorRange: colorRange,
       },
       allData,
       attributeLabels[0]
@@ -169,7 +166,6 @@ Promise.all([
         containerWidth: panelWidth,
         containerHeight: panelHeight,
         tooltipTag: "#tooltip-hist-2",
-        colorRange: colorRange,
       },
       allData,
       attributeLabels[1]
@@ -279,6 +275,12 @@ function resetAll() {
 
 // automataically update the attributes when the dropdown is changed
 d3.select("#attribute-1-select").on("change", () => {
+  attributeRanges = {
+    [defaultAttributeLabels[0]]: [],
+    [defaultAttributeLabels[1]]: [],
+  };
+  updateScatterplotData();
+  updateChoroplethData();
   updateButton();
 });
 d3.select("#attribute-2-select").on("change", () => {
@@ -308,12 +310,8 @@ d3.select("#histogram-2-bins").on("change", () => {
 function updateColor() {
   let color1 = d3.select("#colorpicker-1").property("value");
   let color2 = d3.select("#colorpicker-2").property("value");
-  let colorRange = [color1, color2];
   accentColor = d3.select("#colorpicker-3").property("value");
-  chloropleth.changeColorRange(colorRange);
-  scatterplot.changeColorRange(colorRange);
-  histogram1.changeColorRange(colorRange);
-  histogram2.changeColorRange(colorRange);
+  colorRange = [color1, color2];
 }
 
 // update the attributes with update button
