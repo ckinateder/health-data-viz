@@ -85,15 +85,20 @@ class ScatterPlot {
       .attr("cx", (d) => vis.xScale(d.properties[this.attributeLabels[0]]))
       .attr("cy", (d) => vis.yScale(d.properties[this.attributeLabels[1]]))
       .attr("r", 2)
+      .attr("fill", vis.midColor)
       .attr("opacity", 0.8)
+      .classed("active", (d) => this.expression(d));
+
+    vis.dots
+      .transition()
+      .duration(50)
       .attr("fill", (d) => {
         if (this.expression(d)) {
           return accentColor;
         } else {
           return vis.midColor;
         }
-      })
-      .classed("active", (d) => this.expression(d));
+      });
 
     vis.dots
       .on("mousemove", (event, d) => {
@@ -136,7 +141,7 @@ class ScatterPlot {
         d3.select(vis.config.tooltipTag).style("display", "none");
         d3.select(event.target)
           .transition()
-          .duration(150)
+          .duration(50)
           .attr("r", 2)
           .attr("fill", (d) => {
             if (this.expression(d)) {

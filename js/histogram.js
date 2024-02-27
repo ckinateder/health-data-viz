@@ -49,13 +49,37 @@ class Histogram {
     // clear the svg
     vis.svg.selectAll("*").remove();
 
-    if (attributeRanges[vis.attributeLabel] === undefined) {
-      attributeRanges[vis.attributeLabel] = [];
-    }
-
     // Extract the values from the data
     const values = vis.data.map((d) => d.properties[vis.attributeLabel]);
 
+    vis.brush = d3
+      .brushX()
+      .extent([
+        [vis.config.margin.left, vis.config.margin.top],
+        [
+          vis.config.margin.left + vis.width,
+          vis.height + vis.config.margin.top,
+        ],
+      ])
+      .on("brush", (event) => {
+        const extent = event.selection;
+        let range = [
+          Math.round(vis.xScale.invert(extent[0])),
+          Math.round(vis.xScale.invert(extent[1])),
+        ];
+        attributeRanges[vis.attributeLabel] = [range];
+        updateChoroplethData();
+        updateScatterplotData();
+      })
+      .on("end", (event) => {
+        if (!event.selection) {
+          attributeRanges[vis.attributeLabel] = [];
+          updateChoroplethData();
+          updateScatterplotData();
+        }
+      });
+
+    const brushG = vis.svg.append("g").attr("class", "brush").call(vis.brush);
     vis.xScale = d3
       .scaleLinear()
       .domain([0, d3.max(values)])
@@ -135,6 +159,7 @@ class Histogram {
         }
       })
       .on("click", (event, d) => {
+        /*
         // if the array is empty or the attribute is not in the array
         let range = [d.x0, d.x1];
 
@@ -156,6 +181,7 @@ class Histogram {
 
         updateChoroplethData();
         updateScatterplotData();
+        **/
       });
 
     vis.xAxis = d3.axisBottom(vis.xScale);
@@ -222,5 +248,7 @@ class Histogram {
   changeNumBins(numBins) {
     this.config.numBins = numBins;
     attributeRanges[this.attributeLabel] = []; // reset the attributeRanges
+    updateChoroplethData();
+    updateScatterplotData();
   }
 }

@@ -262,10 +262,6 @@ function resetAll() {
   histogram1.changeNumBins(defaultHistogramBins);
   histogram2.changeNumBins(defaultHistogramBins);
 
-  attributeRanges = {
-    [defaultAttributeLabels[0]]: [],
-    [defaultAttributeLabels[1]]: [],
-  };
   updateDropdown();
   updateColor();
   updateButton();
@@ -275,12 +271,6 @@ function resetAll() {
 
 // automataically update the attributes when the dropdown is changed
 d3.select("#attribute-1-select").on("change", () => {
-  attributeRanges = {
-    [defaultAttributeLabels[0]]: [],
-    [defaultAttributeLabels[1]]: [],
-  };
-  updateScatterplotData();
-  updateChoroplethData();
   updateButton();
 });
 d3.select("#attribute-2-select").on("change", () => {
@@ -320,6 +310,11 @@ function updateDropdown() {
   let attribute2Label = d3.select("#attribute-2-select").property("value");
 
   attributeLabels = [attribute1Label, attribute2Label];
+
+  attributeRanges = {
+    attribute1Label: [],
+    attribute2Label: [],
+  };
 
   chloropleth.changeAttributes(attributeLabels);
   scatterplot.changeAttributes(attributeLabels);

@@ -132,20 +132,24 @@ class ChoroplethMap {
       .range(colorRange)
       .interpolate(d3.interpolateHcl);
 
-    vis.counties.attr("fill", (d) => {
-      if (
-        d.properties[this.attributeLabels[0]] !== undefined &&
-        d.properties[this.attributeLabels[0]] !== -1
-      ) {
-        if (this.expression(d)) {
-          return accentColor;
+    vis.counties
+      .transition()
+      .duration(200)
+      .attr("fill", (d) => {
+        if (
+          d.properties[this.attributeLabels[0]] !== undefined &&
+          d.properties[this.attributeLabels[0]] !== -1
+        ) {
+          if (this.expression(d)) {
+            return accentColor;
+          } else {
+            return vis.colorScale(d.properties[this.attributeLabels[0]]);
+          }
         } else {
-          return vis.colorScale(d.properties[this.attributeLabels[0]]);
+          return "url(#lightstripe)";
         }
-      } else {
-        return "url(#lightstripe)";
-      }
-    });
+      });
+    vis.counties.classed("active", (d) => this.expression(d));
 
     vis.counties
       .on("mousemove", (event, d) => {
