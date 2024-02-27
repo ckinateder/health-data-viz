@@ -190,6 +190,12 @@ function expressionInAnyRange() {
   let attributeLabel2 = attributeLabels[1];
   // make expression that returns true if either attribute is in any of the ranges for that attribute
   return (expression = (d) => {
+    if (attributeRanges[attributeLabel1] === undefined) {
+      attributeRanges[attributeLabel1] = [];
+    }
+    if (attributeRanges[attributeLabel2] === undefined) {
+      attributeRanges[attributeLabel2] = [];
+    }
     for (let i = 0; i < attributeRanges[attributeLabel1].length; i++) {
       if (
         d.properties[attributeLabel1] >=
@@ -231,10 +237,11 @@ d3.select("#swap-btn").on("click", () => {
   let attribute2 = d3.select("#attribute-2-select").property("value");
   d3.select("#attribute-1-select").property("value", attribute2);
   d3.select("#attribute-2-select").property("value", attribute1);
+  attributeLabels = [attribute2, attribute1];
 
   attributeRanges = {
-    [defaultAttributeLabels[0]]: [],
-    [defaultAttributeLabels[1]]: [],
+    attribute2: [],
+    attribute1: [],
   };
   updateChoroplethData();
   updateScatterplotData();
