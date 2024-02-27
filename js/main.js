@@ -215,6 +215,12 @@ function updateScatterplotData() {
   scatterplot.updateVis();
 }
 
+function updateChoroplethData() {
+  let exp = expressionInAnyRange(attributeLabels[0], attributeLabels[1]);
+  chloropleth.setExpression(exp);
+  chloropleth.updateVis();
+}
+
 // swap the attributes with swap button
 d3.select("#swap-btn").on("click", () => {
   let attribute1 = d3.select("#attribute-1-select").property("value");
@@ -226,6 +232,7 @@ d3.select("#swap-btn").on("click", () => {
     [defaultAttributeLabels[0]]: [],
     [defaultAttributeLabels[1]]: [],
   };
+  updateChoroplethData();
   updateScatterplotData();
   updateButton();
 });
@@ -255,6 +262,7 @@ function resetAll() {
   updateColor();
   updateButton();
   updateScatterplotData();
+  updateChoroplethData();
 }
 
 // automataically update the attributes when the dropdown is changed

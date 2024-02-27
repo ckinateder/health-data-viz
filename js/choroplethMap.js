@@ -18,7 +18,9 @@ class ChoroplethMap {
     // this.config = _config;
     this.attributeLabels = _attributeLabels;
     this.us = _data;
-
+    this.setExpression((d) => {
+      return false;
+    });
     this.active = d3.select(null);
 
     this.initVis();
@@ -136,7 +138,11 @@ class ChoroplethMap {
         d.properties[this.attributeLabels[0]] !== undefined &&
         d.properties[this.attributeLabels[0]] !== -1
       ) {
-        return vis.colorScale(d.properties[this.attributeLabels[0]]);
+        if (this.expression(d)) {
+          return "orange";
+        } else {
+          return vis.colorScale(d.properties[this.attributeLabels[0]]);
+        }
       } else {
         return "url(#lightstripe)";
       }
@@ -214,5 +220,10 @@ class ChoroplethMap {
   setData(data) {
     this.data = data;
     // scatterplot.updateVis();
+  }
+
+  setExpression(expression) {
+    this.expression = expression;
+    console.log(expression);
   }
 }

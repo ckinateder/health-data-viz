@@ -155,6 +155,7 @@ class Histogram {
           attributeRanges[vis.attributeLabel].push(range);
         }
 
+        updateChoroplethData();
         updateScatterplotData();
       });
 
