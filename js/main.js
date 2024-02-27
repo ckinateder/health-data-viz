@@ -11,7 +11,9 @@ let allData,
   defaultAttributeLabels,
   defaultHistogramBins,
   defaultColorRange,
-  colorRange;
+  colorRange,
+  accentColor,
+  defaultAccentColor;
 
 let attributeRanges;
 
@@ -101,9 +103,11 @@ Promise.all([
     defaultAttributeLabels = ["median_household_income", "percent_stroke"];
     defaultColorRange = ["#00BEFF", "#571846"];
     defaultHistogramBins = 40;
+    defaultAccentColor = "#ff9b00";
 
     attributeLabels = defaultAttributeLabels;
     colorRange = defaultColorRange;
+    accentColor = defaultAccentColor;
 
     attributeRanges = {
       [attributeLabels[0]]: [],
@@ -251,6 +255,7 @@ function resetAll() {
   d3.select("#colorpicker-2").property("value", defaultColorRange[1]);
   d3.select("#histogram-1-bins").property("value", defaultHistogramBins);
   d3.select("#histogram-2-bins").property("value", defaultHistogramBins);
+  d3.select("#colorpicker-3").property("value", defaultAccentColor);
   histogram1.changeNumBins(defaultHistogramBins);
   histogram2.changeNumBins(defaultHistogramBins);
 
@@ -279,6 +284,10 @@ d3.select("#colorpicker-1").on("change", () => {
 d3.select("#colorpicker-2").on("change", () => {
   updateButton();
 });
+d3.select("#colorpicker-3").on("change", () => {
+  updateButton();
+});
+
 d3.select("#histogram-1-bins").on("change", () => {
   histogram1.changeNumBins(d3.select("#histogram-1-bins").property("value"));
   histogram1.updateVis();
@@ -293,6 +302,7 @@ function updateColor() {
   let color1 = d3.select("#colorpicker-1").property("value");
   let color2 = d3.select("#colorpicker-2").property("value");
   let colorRange = [color1, color2];
+  accentColor = d3.select("#colorpicker-3").property("value");
   chloropleth.changeColorRange(colorRange);
   scatterplot.changeColorRange(colorRange);
   histogram1.changeColorRange(colorRange);

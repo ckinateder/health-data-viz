@@ -92,7 +92,7 @@ class ScatterPlot {
       .attr("opacity", 0.8)
       .attr("fill", (d) => {
         if (this.expression(d)) {
-          return "orange";
+          return accentColor;
         } else {
           return vis.midColor;
         }
@@ -133,7 +133,7 @@ class ScatterPlot {
           .transition()
           .duration(50)
           .attr("r", 5)
-          .attr("fill", "orange")
+          .attr("fill", accentColor)
           .attr("opacity", 1);
       })
       .on("mouseleave", (event, d) => {
@@ -144,7 +144,7 @@ class ScatterPlot {
           .attr("r", 2)
           .attr("fill", (d) => {
             if (this.expression(d)) {
-              return "orange";
+              return accentColor;
             } else {
               return vis.midColor;
             }
@@ -223,7 +223,6 @@ class ScatterPlot {
 
   setExpression(expression) {
     this.expression = expression;
-    console.log(expression);
   }
 
   changeAttributes(attributeLabels) {

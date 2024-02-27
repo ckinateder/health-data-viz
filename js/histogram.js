@@ -114,7 +114,7 @@ class Histogram {
         d3.select(event.currentTarget)
           .transition()
           .duration(50)
-          .style("fill", "orange");
+          .style("fill", accentColor);
 
         const x = event.pageX;
         const y = event.pageY;
@@ -149,7 +149,7 @@ class Histogram {
           );
         } else {
           d3.select(event.currentTarget)
-            .attr("fill", "orange")
+            .attr("fill", accentColor)
             .classed("active", true);
 
           attributeRanges[vis.attributeLabel].push(range);

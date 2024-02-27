@@ -139,7 +139,7 @@ class ChoroplethMap {
         d.properties[this.attributeLabels[0]] !== -1
       ) {
         if (this.expression(d)) {
-          return "orange";
+          return accentColor;
         } else {
           return vis.colorScale(d.properties[this.attributeLabels[0]]);
         }
@@ -171,7 +171,10 @@ class ChoroplethMap {
                         <div>${a2}</div>
                       `);
 
-        d3.select(event.target).transition().duration(0).attr("fill", "orange");
+        d3.select(event.target)
+          .transition()
+          .duration(0)
+          .attr("fill", accentColor);
       })
       .on("mouseleave", (event, d) => {
         d3.select(vis.config.tooltipTag).style("display", "none");
@@ -186,7 +189,6 @@ class ChoroplethMap {
             }
           });
       });
-
     // Add X axis label:
     vis.svg
       .append("text")
@@ -224,6 +226,5 @@ class ChoroplethMap {
 
   setExpression(expression) {
     this.expression = expression;
-    console.log(expression);
   }
 }
