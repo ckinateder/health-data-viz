@@ -10,6 +10,7 @@ class ScatterPlot {
       tooltipTag: _config.tooltipTag || "#tooltip-scatter",
       disabledOpacity: 0.3,
       enabledOpacity: 1,
+      dotSize: 2,
     };
 
     this.data = _data.objects.counties.geometries;
@@ -78,7 +79,7 @@ class ScatterPlot {
         attributeRanges[attributeLabels[0]] = xRange;
         attributeRanges[attributeLabels[1]] = yRange;
 
-        //scatterplotBrushUpdate();
+        if (liveBrushing) scatterplotBrushUpdate();
       })
       .on("end", (event) => {
         scatterplotBrushUpdate();
@@ -130,7 +131,7 @@ class ScatterPlot {
       .join("circle")
       .attr("cx", (d) => vis.xScale(d.properties[attributeLabels[0]]))
       .attr("cy", (d) => vis.yScale(d.properties[attributeLabels[1]]))
-      .attr("r", 2)
+      .attr("r", this.config.dotSize)
       .attr("opacity", 0.8);
 
     vis.dots
@@ -186,7 +187,7 @@ class ScatterPlot {
         d3.select(event.target)
           .transition()
           .duration(offTransitionDuration)
-          .attr("r", 2)
+          .attr("r", this.config.dotSize)
           .attr("fill", (d) => {
             if (checkRange(d)) {
               return accentColor;
@@ -273,5 +274,9 @@ class ScatterPlot {
 
   changeColorRange(colorRange) {
     colorRange = colorRange;
+  }
+
+  setDotSize(dotSize) {
+    this.config.dotSize = dotSize;
   }
 }

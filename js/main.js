@@ -17,7 +17,11 @@ let allData,
   panelHeight,
   defaultAccentColor,
   defaultWidth,
-  defaultHeight;
+  defaultHeight,
+  defaultLiveBrushing,
+  liveBrushing,
+  dotSize,
+  defaultDotSize;
 
 let attributeRanges;
 
@@ -115,13 +119,16 @@ Promise.all([
     defaultAccentColor = "#ff9b00";
     defaultWidth = 650;
     defaultHeight = 400;
+    defaultLiveBrushing = false;
+    defaultDotSize = 2;
 
     panelWidth = defaultWidth;
     panelHeight = defaultHeight;
-
+    dotSize = defaultDotSize;
     attributeLabels = defaultAttributeLabels;
     colorRange = defaultColorRange;
     accentColor = defaultAccentColor;
+    liveBrushing = defaultLiveBrushing;
 
     attributeRanges = {
       [attributeLabels[0]]: [],
@@ -138,6 +145,8 @@ Promise.all([
     d3.select("#colorpicker-3").property("value", accentColor);
     d3.select("#panel-width").property("value", defaultWidth);
     d3.select("#panel-height").property("value", defaultHeight);
+    d3.select("#live-brushing").property("checked", defaultLiveBrushing);
+    d3.select("#scatter-dot-size").property("value", defaultDotSize);
 
     //const colorRange = ["#386C30", "#04F11B"];
 
@@ -215,6 +224,16 @@ function updateDimensions() {
   updateButton();
 }
 
+d3.select("#scatter-dot-size").on("change", () => {
+  dotSize = d3.select("#scatter-dot-size").property("value");
+  scatterplot.setDotSize(dotSize);
+  scatterplot.updateVis();
+});
+
+d3.select("#live-brushing").on("change", () => {
+  liveBrushing = d3.select("#live-brushing").property("checked");
+});
+
 //update width and height of the panel
 d3.select("#panel-width").on("change", () => {
   updateDimensions();
@@ -253,11 +272,14 @@ function resetAll() {
   d3.select("#colorpicker-3").property("value", defaultAccentColor);
   d3.select("#panel-width").property("value", defaultWidth);
   d3.select("#panel-height").property("value", defaultHeight);
+  d3.select("#live-brushing").property("checked", defaultLiveBrushing);
+  d3.select("#scatter-dot-size").property("value", defaultDotSize);
 
   updateDimensions();
 
   histogram1.changeNumBins(defaultHistogramBins);
   histogram2.changeNumBins(defaultHistogramBins);
+  scatterplot.setDotSize(defaultDotSize);
 
   updateDropdown();
   updateColor();

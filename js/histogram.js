@@ -11,7 +11,6 @@ class Histogram {
       disabledOpacity: 0.3,
       enabledOpacity: 1,
     };
-
     this.data = _data.objects.counties.geometries;
     this.active = d3.select(null);
     this.attributeLabel = _attributeLabel;
@@ -74,7 +73,8 @@ class Histogram {
           vis.xScale.invert(extent[1]),
         ];
         attributeRanges[vis.attributeLabel] = range;
-        //histogramBrushUpdate();
+
+        if (liveBrushing) histogramBrushUpdate();
       })
       .on("end", (event) => {
         histogramBrushUpdate();
