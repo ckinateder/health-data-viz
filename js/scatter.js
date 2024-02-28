@@ -43,7 +43,6 @@ class ScatterPlot {
 
     this.updateVis(); //leave this empty for now...
   }
-
   //  //leave this empty for now
   updateVis() {
     let vis = this;
@@ -84,11 +83,11 @@ class ScatterPlot {
       .on("end", (event) => {
         scatterplotBrushUpdate();
         this.updateVis();
+        this.brushOn = false;
         if (!event.selection) {
-          this.brushOn = false;
           attributeRanges = {};
-          scatterplotBrushUpdate();
           this.updateVis();
+          scatterplotBrushUpdate();
         }
       });
 
@@ -189,7 +188,7 @@ class ScatterPlot {
           .duration(offTransitionDuration)
           .attr("r", this.config.dotSize)
           .attr("fill", (d) => {
-            if (checkRange(d)) {
+            if (checkRange(d) && !this.brushOn) {
               return accentColor;
             } else {
               return vis.midColor;

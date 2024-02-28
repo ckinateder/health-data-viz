@@ -218,6 +218,8 @@ function histogramBrushUpdate() {
 function scatterplotBrushUpdate() {
   union = false; // intersection of the ranges for scatterplot update
   chloropleth.updateVis();
+  histogram1.updateVis();
+  histogram2.updateVis();
 }
 
 function resetHistogramBrushes() {

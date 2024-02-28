@@ -54,6 +54,7 @@ class Histogram {
     // Extract the values from the data
     const values = vis.data.map((d) => d.properties[vis.attributeLabel]);
 
+    let brushOn;
     vis.brush = d3
       .brushX()
       .extent([
@@ -64,6 +65,7 @@ class Histogram {
         ],
       ])
       .on("brush", (event) => {
+        brushOn = true;
         const extent = event.selection;
         extent[0] = extent[0] - vis.config.margin.left;
         extent[1] = extent[1] - vis.config.margin.left;
@@ -76,11 +78,14 @@ class Histogram {
         if (liveBrushing) histogramBrushUpdate();
       })
       .on("end", (event) => {
+        brushOn = false;
         histogramBrushUpdate();
+        resetHistogramBrushes();
+        this.updateVis();
         if (!event.selection) {
           attributeRanges = {};
           histogramBrushUpdate();
-          this.updateVis();
+          resetHistogramBrushes();
         }
       });
 
@@ -135,6 +140,9 @@ class Histogram {
       })
       .attr("height", (d) => vis.height - vis.yScale(d.length))
       .attr("fill", (d) => {
+        if (this.rectTouchesRange(d)) {
+          return accentColor;
+        }
         return vis.colorScale(d.length);
       })
       .attr("opacity", vis.config.enabledOpacity);
@@ -163,6 +171,9 @@ class Histogram {
             .transition()
             .duration(onTransitionDuration)
             .style("fill", (d) => {
+              if (this.rectTouchesRange(d) && !brushOn) {
+                return accentColor;
+              }
               return vis.colorScale(d.length);
             });
         }
@@ -255,5 +266,15 @@ class Histogram {
     this.config.containerWidth = width;
     this.config.containerHeight = height;
     this.calculateSize();
+  }
+
+  rectTouchesRange(bin) {
+    if (attributeRanges[this.attributeLabel] === undefined) {
+      return false;
+    }
+    return (
+      inRange(bin.x0, attributeRanges[this.attributeLabel]) ||
+      inRange(bin.x1, attributeRanges[this.attributeLabel])
+    );
   }
 }
