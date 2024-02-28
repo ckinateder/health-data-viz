@@ -206,7 +206,7 @@ class ChoroplethMap {
           vis.height + vis.config.margin.bottom + 15
         })`
       )
-      .text("Counties colored by " + attributeLabels[0]);
+      .text(attributeLabels[0]);
 
     this.renderVis();
   }
@@ -216,5 +216,24 @@ class ChoroplethMap {
 
   changeColorRange(colorRange) {
     colorRange = colorRange;
+  }
+
+  calculateSize() {
+    let vis = this;
+
+    vis.width =
+      vis.config.containerWidth -
+      vis.config.margin.left -
+      vis.config.margin.right;
+    vis.height =
+      vis.config.containerHeight -
+      vis.config.margin.top -
+      vis.config.margin.bottom;
+  }
+
+  setDimensions(width, height) {
+    this.config.containerWidth = width;
+    this.config.containerHeight = height;
+    this.calculateSize();
   }
 }

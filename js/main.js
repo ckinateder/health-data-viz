@@ -13,7 +13,11 @@ let allData,
   defaultColorRange,
   colorRange,
   accentColor,
-  defaultAccentColor;
+  panelWidth,
+  panelHeight,
+  defaultAccentColor,
+  defaultWidth,
+  defaultHeight;
 
 let attributeRanges;
 
@@ -109,6 +113,11 @@ Promise.all([
     defaultColorRange = ["#00BEFF", "#571846"];
     defaultHistogramBins = 40;
     defaultAccentColor = "#ff9b00";
+    defaultWidth = 650;
+    defaultHeight = 400;
+
+    panelWidth = defaultWidth;
+    panelHeight = defaultHeight;
 
     attributeLabels = defaultAttributeLabels;
     colorRange = defaultColorRange;
@@ -126,9 +135,10 @@ Promise.all([
     d3.select("#colorpicker-2").property("value", colorRange[1]);
     d3.select("#histogram-1-bins").property("value", defaultHistogramBins);
     d3.select("#histogram-2-bins").property("value", defaultHistogramBins);
+    d3.select("#colorpicker-3").property("value", accentColor);
+    d3.select("#panel-width").property("value", defaultWidth);
+    d3.select("#panel-height").property("value", defaultHeight);
 
-    const panelWidth = 800;
-    const panelHeight = 475;
     //const colorRange = ["#386C30", "#04F11B"];
 
     // colored by first attribute
@@ -193,6 +203,27 @@ function resetHistogramBrushes() {
   histogram2.updateVis();
 }
 
+function updateDimensions() {
+  panelWidth = d3.select("#panel-width").property("value");
+  panelHeight = d3.select("#panel-height").property("value");
+
+  scatterplot.setDimensions(panelWidth, panelHeight);
+  chloropleth.setDimensions(panelWidth, panelHeight);
+  histogram1.setDimensions(panelWidth, panelHeight);
+  histogram2.setDimensions(panelWidth, panelHeight);
+
+  updateButton();
+}
+
+//update width and height of the panel
+d3.select("#panel-width").on("change", () => {
+  updateDimensions();
+});
+
+d3.select("#panel-height").on("change", () => {
+  updateDimensions();
+});
+
 // swap the attributes with swap button
 d3.select("#swap-btn").on("click", () => {
   let attribute1 = d3.select("#attribute-1-select").property("value");
@@ -220,6 +251,11 @@ function resetAll() {
   d3.select("#histogram-1-bins").property("value", defaultHistogramBins);
   d3.select("#histogram-2-bins").property("value", defaultHistogramBins);
   d3.select("#colorpicker-3").property("value", defaultAccentColor);
+  d3.select("#panel-width").property("value", defaultWidth);
+  d3.select("#panel-height").property("value", defaultHeight);
+
+  updateDimensions();
+
   histogram1.changeNumBins(defaultHistogramBins);
   histogram2.changeNumBins(defaultHistogramBins);
 

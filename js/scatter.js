@@ -204,7 +204,7 @@ class ScatterPlot {
       .append("g")
       .attr("class", "axis x-axis")
       .attr("transform", `translate(0, ${vis.height})`)
-      .call(vis.xAxis);
+      .call(vis.xAxis.ticks(6));
 
     vis.yAxisGroup = vis.chart
       .append("g")
@@ -255,6 +255,12 @@ class ScatterPlot {
       vis.config.containerHeight -
       vis.config.margin.top -
       vis.config.margin.bottom;
+  }
+
+  setDimensions(width, height) {
+    this.config.containerWidth = width;
+    this.config.containerHeight = height;
+    this.calculateSize();
   }
 
   cleanData() {
