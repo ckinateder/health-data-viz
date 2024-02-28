@@ -22,7 +22,7 @@ There are four views in the visualization. The first view is a chloropleth map o
 
 There are two dropdown menus that allow the user to select from the data which two variables they would like to compare. There is a button to swap the two variables, and a button to reset the visualization to the default view. There are three color pickers, one for the low end of the color scale, one for the high end, and one for the accent (highlight) color. There are three sliders, two that allow the user to select the number of bins for each histogram, and one to control the size of the points in the scatter plot. Lastly, there is a checkbox to toggle real-time updates for the brush tool.
 
-The user can select a range of points in the scatter plot, and the chloropleth map will update to show only the counties that correspond to the selected points. The user can also select a range of values in the histograms, and the scatter plot and chloropleth will update to show only the points that correspond to the selected range. Brushing over the scatterplot results in an *intersection* of the selected points, while brushing over the histograms results in a *union* of the selected points.
+The user can select a range of points in the scatter plot, and the chloropleth and histogram will update to show only the counties that correspond and distributions that include the selected points. The user can also select a range of values in the histograms, and the scatter plot and chloropleth will update to show only the points that correspond to the selected range. Brushing over the scatterplot results in an *intersection* of the selected points, while brushing over the histograms results in a *union* of the selected points.
 
 ## Process
 
