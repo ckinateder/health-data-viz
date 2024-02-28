@@ -15,6 +15,9 @@ class Histogram {
     this.data = _data.objects.counties.geometries;
     this.active = d3.select(null);
     this.attributeLabel = _attributeLabel;
+    this.setExpression((d) => {
+      return false;
+    });
     // Call a class function
     this.initVis();
   }
@@ -67,15 +70,13 @@ class Histogram {
           Math.round(vis.xScale.invert(extent[0])),
           Math.round(vis.xScale.invert(extent[1])),
         ];
-        attributeRanges[vis.attributeLabel] = [range];
-        updateChoroplethData();
-        updateScatterplotData();
+        attributeRanges[vis.attributeLabel] = range;
+        histogramBrushUpdate();
       })
       .on("end", (event) => {
         if (!event.selection) {
           attributeRanges[vis.attributeLabel] = [];
-          updateChoroplethData();
-          updateScatterplotData();
+          histogramBrushUpdate();
         }
       });
 
@@ -129,14 +130,16 @@ class Histogram {
         return r < 0 ? 0 : r; // if the width is negative, set it to 0
       })
       .attr("height", (d) => vis.height - vis.yScale(d.length))
-      .attr("fill", (d) => vis.colorScale(d.length))
+      .attr("fill", (d) => {
+        return vis.colorScale(d.length);
+      })
       .attr("opacity", vis.config.enabledOpacity);
 
     vis.rects
       .on("mousemove", (event, d) => {
         d3.select(event.currentTarget)
           .transition()
-          .duration(50)
+          .duration(onTransitionDuration)
           .style("fill", accentColor);
 
         const x = event.pageX;
@@ -154,34 +157,11 @@ class Histogram {
         if (!d3.select(event.currentTarget).classed("active")) {
           d3.select(event.currentTarget)
             .transition()
-            .duration(150)
-            .style("fill", (d) => vis.colorScale(d.length));
+            .duration(onTransitionDuration)
+            .style("fill", (d) => {
+              return vis.colorScale(d.length);
+            });
         }
-      })
-      .on("click", (event, d) => {
-        /*
-        // if the array is empty or the attribute is not in the array
-        let range = [d.x0, d.x1];
-
-        if (includesArray(attributeRanges[vis.attributeLabel], range)) {
-          d3.select(event.currentTarget)
-            .attr("fill", (d) => vis.colorScale(d.length))
-            .classed("active", false);
-          attributeRanges[vis.attributeLabel] = removeArrayFromArray(
-            attributeRanges[vis.attributeLabel],
-            range
-          );
-        } else {
-          d3.select(event.currentTarget)
-            .attr("fill", accentColor)
-            .classed("active", true);
-
-          attributeRanges[vis.attributeLabel].push(range);
-        }
-
-        updateChoroplethData();
-        updateScatterplotData();
-        **/
       });
 
     vis.xAxis = d3.axisBottom(vis.xScale);
@@ -250,5 +230,8 @@ class Histogram {
     attributeRanges[this.attributeLabel] = []; // reset the attributeRanges
     updateChoroplethData();
     updateScatterplotData();
+  }
+  setExpression(expression) {
+    this.expression = expression;
   }
 }

@@ -16,12 +16,13 @@ class ScatterPlot {
     this.data = cleanData(this.data, _attributeLabels); // clean
 
     this.active = d3.select(null);
-    this.attributeLabels = _attributeLabels; // array of 2 attributes
     this.setExpression((d) => {
       return false;
     }); // default expression
     // Call a class function
     this.initVis();
+
+    this.brushOn = false;
   }
 
   initVis() {
@@ -46,24 +47,62 @@ class ScatterPlot {
   updateVis() {
     let vis = this;
 
+    vis.brush = d3
+      .brush()
+      .extent([
+        [vis.config.margin.left, vis.config.margin.top],
+        [
+          vis.config.margin.left + vis.width,
+          vis.height + vis.config.margin.top,
+        ],
+      ])
+      .on("brush", (event) => {
+        this.brushOn = true;
+        const extent = event.selection;
+
+        const xRange = [
+          Math.round(vis.xScale.invert(extent[0][0])),
+          Math.round(vis.xScale.invert(extent[1][0])),
+        ];
+
+        const yRange = [
+          Math.round(vis.yScale.invert(extent[0][1])),
+          Math.round(vis.yScale.invert(extent[1][1])),
+        ];
+
+        attributeRanges[attributeLabels[0]] = xRange;
+        attributeRanges[attributeLabels[1]] = yRange;
+        scatterplotBrushUpdate();
+      })
+      .on("end", (event) => {
+        if (!event.selection) {
+          this.brushOn = false;
+          attributeRanges = {};
+          attributeRanges[attributeLabels[0]] = [];
+          attributeRanges[attributeLabels[1]] = [];
+          scatterplotBrushUpdate();
+        }
+      });
+
     // clear the svg
     vis.svg.selectAll("*").remove();
+    const brushG = vis.svg.append("g").attr("class", "brush").call(vis.brush);
 
     this.calculateSize();
 
     vis.xScale = d3
       .scaleLinear()
       .domain([
-        d3.min(this.data, (d) => d.properties[this.attributeLabels[0]]),
-        d3.max(this.data, (d) => d.properties[this.attributeLabels[0]]),
+        d3.min(this.data, (d) => d.properties[attributeLabels[0]]),
+        d3.max(this.data, (d) => d.properties[attributeLabels[0]]),
       ])
       .range([0, vis.width]);
 
     vis.yScale = d3
       .scaleLinear()
       .domain([
-        d3.min(this.data, (d) => d.properties[this.attributeLabels[1]]),
-        d3.max(this.data, (d) => d.properties[this.attributeLabels[1]]),
+        d3.min(this.data, (d) => d.properties[attributeLabels[1]]),
+        d3.max(this.data, (d) => d.properties[attributeLabels[1]]),
       ])
       .range([vis.height, 0]);
 
@@ -82,18 +121,16 @@ class ScatterPlot {
       .selectAll("dot")
       .data(this.data)
       .join("circle")
-      .attr("cx", (d) => vis.xScale(d.properties[this.attributeLabels[0]]))
-      .attr("cy", (d) => vis.yScale(d.properties[this.attributeLabels[1]]))
+      .attr("cx", (d) => vis.xScale(d.properties[attributeLabels[0]]))
+      .attr("cy", (d) => vis.yScale(d.properties[attributeLabels[1]]))
       .attr("r", 2)
-      .attr("fill", vis.midColor)
-      .attr("opacity", 0.8)
-      .classed("active", (d) => this.expression(d));
+      .attr("opacity", 0.8);
 
     vis.dots
       .transition()
-      .duration(50)
+      .duration(onTransitionDuration)
       .attr("fill", (d) => {
-        if (this.expression(d)) {
+        if (this.checkRange(d)) {
           return accentColor;
         } else {
           return vis.midColor;
@@ -102,14 +139,14 @@ class ScatterPlot {
 
     vis.dots
       .on("mousemove", (event, d) => {
-        const a1 = d.properties[this.attributeLabels[0]]
-          ? `<strong>${d.properties[this.attributeLabels[0]]}</strong> ${
-              this.attributeLabels[0]
+        const a1 = d.properties[attributeLabels[0]]
+          ? `<strong>${d.properties[attributeLabels[0]]}</strong> ${
+              attributeLabels[0]
             }`
           : "No data available";
-        const a2 = d.properties[this.attributeLabels[1]]
-          ? `<strong>${d.properties[this.attributeLabels[1]]}</strong> ${
-              this.attributeLabels[1]
+        const a2 = d.properties[attributeLabels[1]]
+          ? `<strong>${d.properties[attributeLabels[1]]}</strong> ${
+              attributeLabels[1]
             }`
           : "No data available";
         const a3 = d.properties.name
@@ -132,7 +169,7 @@ class ScatterPlot {
         // make the dot bigger
         d3.select(event.target)
           .transition()
-          .duration(50)
+          .duration(onTransitionDuration)
           .attr("r", 5)
           .attr("fill", accentColor)
           .attr("opacity", 1);
@@ -141,10 +178,10 @@ class ScatterPlot {
         d3.select(vis.config.tooltipTag).style("display", "none");
         d3.select(event.target)
           .transition()
-          .duration(50)
+          .duration(offTransitionDuration)
           .attr("r", 2)
           .attr("fill", (d) => {
-            if (this.expression(d)) {
+            if (this.checkRange(d) && !this.brushOn) {
               return accentColor;
             } else {
               return vis.midColor;
@@ -179,7 +216,7 @@ class ScatterPlot {
           vis.height + vis.config.margin.bottom - 15
         })`
       )
-      .text(this.attributeLabels[0]);
+      .text(attributeLabels[0]);
 
     // Y axis label:
     vis.chart
@@ -194,7 +231,7 @@ class ScatterPlot {
         }) rotate(-90)`
       )
       .attr("dy", "1em")
-      .text(this.attributeLabels[1]);
+      .text(attributeLabels[1]);
     this.renderVis();
   }
 
@@ -212,24 +249,39 @@ class ScatterPlot {
       vis.config.margin.top -
       vis.config.margin.bottom;
   }
-  setAttributeLabels(attributeLabels) {
-    this.attributeLabels = attributeLabels;
-    this.data = cleanData(this.data, this.attributeLabels); // clean
-  }
 
-  setData(data) {
-    this.data = data;
-    this.data = cleanData(this.data, this.attributeLabels); // clean
+  cleanData() {
+    this.data = cleanData(this.data, attributeLabels);
   }
 
   setExpression(expression) {
     this.expression = expression;
   }
 
-  changeAttributes(attributeLabels) {
-    this.setAttributeLabels(attributeLabels);
-  }
   changeColorRange(colorRange) {
     colorRange = colorRange;
+  }
+  checkRange(object) {
+    let coordinate = [
+      object.properties[attributeLabels[0]],
+      object.properties[attributeLabels[1]],
+    ];
+    if (attributeRanges[attributeLabels[0]] === undefined) {
+      attributeRanges[attributeLabels[0]] = [];
+    }
+    if (attributeRanges[attributeLabels[1]] === undefined) {
+      attributeRanges[attributeLabels[1]] = [];
+    }
+
+    if (attributeRanges[attributeLabels[0]].length === 0) {
+      return inRange(coordinate[1], attributeRanges[attributeLabels[1]]);
+    } else if (attributeRanges[attributeLabels[1]].length === 0) {
+      return inRange(coordinate[0], attributeRanges[attributeLabels[0]]);
+    }
+
+    return (
+      inRange(coordinate[1], attributeRanges[attributeLabels[1]]) ||
+      inRange(coordinate[0], attributeRanges[attributeLabels[0]])
+    );
   }
 }

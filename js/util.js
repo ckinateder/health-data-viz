@@ -23,3 +23,10 @@ const removeArrayFromArray = (data, arr) => {
   data.splice(index, 1);
   return data;
 };
+
+const inRange = (value, range) => {
+  return (
+    (value >= range[0] && value <= range[1]) ||
+    (value <= range[0] && value >= range[1])
+  );
+};

@@ -17,6 +17,11 @@ let allData,
 
 let attributeRanges;
 
+let union = true;
+
+const onTransitionDuration = 50;
+const offTransitionDuration = 50;
+
 Promise.all([
   d3.json("data/counties-10m.json"),
   d3.csv("data/population.csv"),
@@ -173,57 +178,13 @@ Promise.all([
   })
   .catch((error) => console.error(error));
 
-/** Example:
- * filterData(
-    testdata,
-    "median_household_income",
-    (d) => d > 50000 && d < 52000
-  );
-*/
-
-function expressionInAnyRange() {
-  let attributeLabel1 = attributeLabels[0];
-  let attributeLabel2 = attributeLabels[1];
-  // make expression that returns true if either attribute is in any of the ranges for that attribute
-  return (expression = (d) => {
-    if (attributeRanges[attributeLabel1] === undefined) {
-      attributeRanges[attributeLabel1] = [];
-    }
-    if (attributeRanges[attributeLabel2] === undefined) {
-      attributeRanges[attributeLabel2] = [];
-    }
-    for (let i = 0; i < attributeRanges[attributeLabel1].length; i++) {
-      if (
-        d.properties[attributeLabel1] >=
-          attributeRanges[attributeLabel1][i][0] &&
-        d.properties[attributeLabel1] <= attributeRanges[attributeLabel1][i][1]
-      ) {
-        return true;
-      }
-    }
-    for (let i = 0; i < attributeRanges[attributeLabel2].length; i++) {
-      if (
-        d.properties[attributeLabel2] >=
-          attributeRanges[attributeLabel2][i][0] &&
-        d.properties[attributeLabel2] <= attributeRanges[attributeLabel2][i][1]
-      ) {
-        return true;
-      }
-    }
-    return false;
-  });
-}
-
-function updateScatterplotData() {
-  // make data equal to the original data filtered by the ranges in attributeRanges for both attributes
-  let exp = expressionInAnyRange(attributeLabels[0], attributeLabels[1]);
-  scatterplot.setExpression(exp);
+function histogramBrushUpdate() {
+  union = true; // union of the ranges for histogram update
+  chloropleth.updateVis();
   scatterplot.updateVis();
 }
-
-function updateChoroplethData() {
-  let exp = expressionInAnyRange(attributeLabels[0], attributeLabels[1]);
-  chloropleth.setExpression(exp);
+function scatterplotBrushUpdate() {
+  union = false; // intersection of the ranges for scatterplot update
   chloropleth.updateVis();
 }
 
@@ -316,8 +277,7 @@ function updateDropdown() {
     attribute2Label: [],
   };
 
-  chloropleth.changeAttributes(attributeLabels);
-  scatterplot.changeAttributes(attributeLabels);
+  scatterplot.cleanData();
   histogram1.changeAttribute(attribute1Label);
   histogram2.changeAttribute(attribute2Label);
 }

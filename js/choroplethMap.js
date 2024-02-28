@@ -15,11 +15,7 @@ class ChoroplethMap {
     };
     this.data = _data;
     // this.config = _config;
-    this.attributeLabels = _attributeLabels;
     this.us = _data;
-    this.setExpression((d) => {
-      return false;
-    });
     this.active = d3.select(null);
 
     this.initVis();
@@ -68,7 +64,7 @@ class ChoroplethMap {
       .domain(
         d3.extent(
           vis.data.objects.counties.geometries,
-          (d) => d.properties[this.attributeLabels[0]]
+          (d) => d.properties[attributeLabels[0]]
         )
       )
       .range(colorRange)
@@ -126,7 +122,7 @@ class ChoroplethMap {
       .domain(
         d3.extent(
           vis.data.objects.counties.geometries,
-          (d) => d.properties[this.attributeLabels[0]]
+          (d) => d.properties[attributeLabels[0]]
         )
       )
       .range(colorRange)
@@ -137,30 +133,29 @@ class ChoroplethMap {
       .duration(200)
       .attr("fill", (d) => {
         if (
-          d.properties[this.attributeLabels[0]] !== undefined &&
-          d.properties[this.attributeLabels[0]] !== -1
+          d.properties[attributeLabels[0]] !== undefined &&
+          d.properties[attributeLabels[0]] !== -1
         ) {
-          if (this.expression(d)) {
+          if (this.checkRange(d)) {
             return accentColor;
           } else {
-            return vis.colorScale(d.properties[this.attributeLabels[0]]);
+            return vis.colorScale(d.properties[attributeLabels[0]]);
           }
         } else {
           return "url(#lightstripe)";
         }
       });
-    vis.counties.classed("active", (d) => this.expression(d));
 
     vis.counties
       .on("mousemove", (event, d) => {
-        const a1 = d.properties[this.attributeLabels[0]]
-          ? `<strong>${d.properties[this.attributeLabels[0]]}</strong> ${
-              this.attributeLabels[0]
+        const a1 = d.properties[attributeLabels[0]]
+          ? `<strong>${d.properties[attributeLabels[0]]}</strong> ${
+              attributeLabels[0]
             }`
           : "No data available";
-        const a2 = d.properties[this.attributeLabels[1]]
-          ? `<strong>${d.properties[this.attributeLabels[1]]}</strong> ${
-              this.attributeLabels[1]
+        const a2 = d.properties[attributeLabels[1]]
+          ? `<strong>${d.properties[attributeLabels[1]]}</strong> ${
+              attributeLabels[1]
             }`
           : "No data available";
 
@@ -183,16 +178,16 @@ class ChoroplethMap {
         d3.select(vis.config.tooltipTag).style("display", "none");
         d3.select(event.target)
           .transition()
-          .duration(250)
+          .duration(onTransitionDuration)
           .attr("fill", (d) => {
             if (
-              d.properties[this.attributeLabels[0]] !== undefined &&
-              d.properties[this.attributeLabels[0]] !== -1
+              d.properties[attributeLabels[0]] !== undefined &&
+              d.properties[attributeLabels[0]] !== -1
             ) {
-              if (this.expression(d)) {
+              if (this.checkRange(d)) {
                 return accentColor;
               } else {
-                return vis.colorScale(d.properties[this.attributeLabels[0]]);
+                return vis.colorScale(d.properties[attributeLabels[0]]);
               }
             } else {
               return "url(#lightstripe)";
@@ -211,7 +206,7 @@ class ChoroplethMap {
           vis.height + vis.config.margin.bottom + 15
         })`
       )
-      .text("Counties colored by " + this.attributeLabels[0]);
+      .text("Counties colored by " + attributeLabels[0]);
 
     this.renderVis();
   }
@@ -219,22 +214,38 @@ class ChoroplethMap {
   // //leave this empty for now...
   renderVis() {}
 
-  setAttributeLabels(attributeLabels) {
-    this.attributeLabels = attributeLabels;
-  }
-  changeAttributes(attributeLabels) {
-    this.setAttributeLabels(attributeLabels);
-  }
   changeColorRange(colorRange) {
     colorRange = colorRange;
   }
 
-  setData(data) {
-    this.data = data;
-    // scatterplot.updateVis();
-  }
+  checkRange(object) {
+    let coordinate = [
+      object.properties[attributeLabels[0]],
+      object.properties[attributeLabels[1]],
+    ];
+    if (attributeRanges[attributeLabels[0]] === undefined) {
+      attributeRanges[attributeLabels[0]] = [];
+    }
+    if (attributeRanges[attributeLabels[1]] === undefined) {
+      attributeRanges[attributeLabels[1]] = [];
+    }
 
-  setExpression(expression) {
-    this.expression = expression;
+    if (attributeRanges[attributeLabels[0]].length === 0) {
+      return inRange(coordinate[1], attributeRanges[attributeLabels[1]]);
+    } else if (attributeRanges[attributeLabels[1]].length === 0) {
+      return inRange(coordinate[0], attributeRanges[attributeLabels[0]]);
+    }
+
+    if (union) {
+      return (
+        inRange(coordinate[1], attributeRanges[attributeLabels[1]]) ||
+        inRange(coordinate[0], attributeRanges[attributeLabels[0]])
+      );
+    } else {
+      return (
+        inRange(coordinate[1], attributeRanges[attributeLabels[1]]) &&
+        inRange(coordinate[0], attributeRanges[attributeLabels[0]])
+      );
+    }
   }
 }
