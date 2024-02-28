@@ -130,7 +130,7 @@ class ChoroplethMap {
 
     vis.counties
       .transition()
-      .duration(200)
+      .duration(onTransitionDuration)
       .attr("fill", (d) => {
         if (
           d.properties[attributeLabels[0]] !== undefined &&
@@ -169,10 +169,7 @@ class ChoroplethMap {
                         <div>${a2}</div>
                       `);
 
-        d3.select(event.target)
-          .transition()
-          .duration(0)
-          .attr("fill", accentColor);
+        d3.select(event.target).attr("fill", accentColor);
       })
       .on("mouseleave", (event, d) => {
         d3.select(vis.config.tooltipTag).style("display", "none");

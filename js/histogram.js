@@ -151,7 +151,7 @@ class Histogram {
       .on("mousemove", (event, d) => {
         d3.select(event.currentTarget)
           .transition()
-          .duration(onTransitionDuration)
+          .duration(10)
           .style("fill", accentColor);
 
         const x = event.pageX;

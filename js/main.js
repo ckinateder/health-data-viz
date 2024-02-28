@@ -292,6 +292,7 @@ function resetAll() {
 
   updateDimensions();
 
+  liveBrushing = defaultLiveBrushing;
   histogram1.changeNumBins(defaultHistogramBins);
   histogram2.changeNumBins(defaultHistogramBins);
   scatterplot.setDotSize(defaultDotSize);
