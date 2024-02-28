@@ -175,12 +175,12 @@ class Histogram {
       .append("g")
       .attr("class", "axis x-axis")
       .attr("transform", `translate(0, ${vis.height})`)
-      .call(vis.xAxis);
+      .call(vis.xAxis.ticks(6).tickFormat(d3.format(".3s")));
 
     vis.yAxisGroup = vis.chart
       .append("g")
       .attr("class", "axis y-axis")
-      .call(vis.yAxis);
+      .call(vis.yAxis.tickFormat(d3.format(".3s")));
 
     // Add X axis label:
     vis.chart

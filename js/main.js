@@ -91,12 +91,25 @@ Promise.all([
      * attributeValues = [value1Array, value2Array]
      * pass both to the scatterplot, hist, and choropleth
      */
-
-    const labels = Object.keys(
-      allData.objects.counties.geometries[0].properties
-    ).filter((item) => {
-      return item !== "name" && item !== "urban_rural_status";
-    });
+    const labels = [
+      "population",
+      "median_household_income",
+      "percent_stroke",
+      "air_quality",
+      "education_less_than_high_school_percent",
+      "poverty_perc",
+      "park_access",
+      "percent_inactive",
+      "percent_smoking",
+      "elderly_percentage",
+      "number_of_hospitals",
+      "number_of_primary_care_physicians",
+      "percent_no_heath_insurance",
+      "percent_high_blood_pressure",
+      "percent_coronary_heart_disease",
+      "percent_stroke",
+      "percent_high_cholesterol",
+    ];
 
     // add categories to the attribute select dropdown
     d3.select("#attribute-1-select")
