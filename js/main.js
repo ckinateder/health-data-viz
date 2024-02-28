@@ -188,6 +188,11 @@ function scatterplotBrushUpdate() {
   chloropleth.updateVis();
 }
 
+function resetHistogramBrushes() {
+  histogram1.updateVis();
+  histogram2.updateVis();
+}
+
 // swap the attributes with swap button
 d3.select("#swap-btn").on("click", () => {
   let attribute1 = d3.select("#attribute-1-select").property("value");

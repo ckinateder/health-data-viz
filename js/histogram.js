@@ -66,17 +66,22 @@ class Histogram {
       ])
       .on("brush", (event) => {
         const extent = event.selection;
+        extent[0] = extent[0] - vis.config.margin.left;
+        extent[1] = extent[1] - vis.config.margin.left;
+
         let range = [
-          Math.round(vis.xScale.invert(extent[0])),
-          Math.round(vis.xScale.invert(extent[1])),
+          vis.xScale.invert(extent[0]),
+          vis.xScale.invert(extent[1]),
         ];
         attributeRanges[vis.attributeLabel] = range;
-        histogramBrushUpdate();
+        //histogramBrushUpdate();
       })
       .on("end", (event) => {
+        histogramBrushUpdate();
         if (!event.selection) {
           attributeRanges[vis.attributeLabel] = [];
           histogramBrushUpdate();
+          this.updateVis();
         }
       });
 

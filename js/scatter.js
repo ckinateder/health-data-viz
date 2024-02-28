@@ -46,7 +46,6 @@ class ScatterPlot {
   //  //leave this empty for now
   updateVis() {
     let vis = this;
-
     vis.brush = d3
       .brush()
       .extent([
@@ -58,29 +57,37 @@ class ScatterPlot {
       ])
       .on("brush", (event) => {
         this.brushOn = true;
-        const extent = event.selection;
+        let extent = event.selection;
+        // apply margins to extent
+
+        extent[0][0] = extent[0][0] - vis.config.margin.left;
+        extent[0][1] = extent[0][1] - vis.config.margin.top;
+        extent[1][0] = extent[1][0] - vis.config.margin.left;
+        extent[1][1] = extent[1][1] - vis.config.margin.top;
 
         const xRange = [
-          Math.round(vis.xScale.invert(extent[0][0])),
-          Math.round(vis.xScale.invert(extent[1][0])),
+          vis.xScale.invert(extent[0][0]),
+          vis.xScale.invert(extent[1][0]),
         ];
 
         const yRange = [
-          Math.round(vis.yScale.invert(extent[0][1])),
-          Math.round(vis.yScale.invert(extent[1][1])),
+          vis.yScale.invert(extent[0][1]),
+          vis.yScale.invert(extent[1][1]),
         ];
 
         attributeRanges[attributeLabels[0]] = xRange;
         attributeRanges[attributeLabels[1]] = yRange;
-        scatterplotBrushUpdate();
+
+        //scatterplotBrushUpdate();
       })
       .on("end", (event) => {
+        scatterplotBrushUpdate();
+        this.updateVis();
         if (!event.selection) {
           this.brushOn = false;
           attributeRanges = {};
-          attributeRanges[attributeLabels[0]] = [];
-          attributeRanges[attributeLabels[1]] = [];
           scatterplotBrushUpdate();
+          this.updateVis();
         }
       });
 
@@ -181,7 +188,7 @@ class ScatterPlot {
           .duration(offTransitionDuration)
           .attr("r", 2)
           .attr("fill", (d) => {
-            if (this.checkRange(d) && !this.brushOn) {
+            if (this.checkRange(d)) {
               return accentColor;
             } else {
               return vis.midColor;
@@ -279,9 +286,16 @@ class ScatterPlot {
       return inRange(coordinate[0], attributeRanges[attributeLabels[0]]);
     }
 
-    return (
-      inRange(coordinate[1], attributeRanges[attributeLabels[1]]) ||
-      inRange(coordinate[0], attributeRanges[attributeLabels[0]])
-    );
+    if (union) {
+      return (
+        inRange(coordinate[1], attributeRanges[attributeLabels[1]]) ||
+        inRange(coordinate[0], attributeRanges[attributeLabels[0]])
+      );
+    } else {
+      return (
+        inRange(coordinate[1], attributeRanges[attributeLabels[1]]) &&
+        inRange(coordinate[0], attributeRanges[attributeLabels[0]])
+      );
+    }
   }
 }
