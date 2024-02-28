@@ -73,13 +73,12 @@ class Histogram {
           vis.xScale.invert(extent[1]),
         ];
         attributeRanges[vis.attributeLabel] = range;
-
         if (liveBrushing) histogramBrushUpdate();
       })
       .on("end", (event) => {
         histogramBrushUpdate();
         if (!event.selection) {
-          attributeRanges[vis.attributeLabel] = [];
+          attributeRanges = {};
           histogramBrushUpdate();
           this.updateVis();
         }
