@@ -201,11 +201,7 @@ d3.select("#swap-btn").on("click", () => {
   d3.select("#attribute-2-select").property("value", attribute1);
   attributeLabels = [attribute2, attribute1];
 
-  attributeRanges = {
-    attribute2: [],
-    attribute1: [],
-  };
-  updateScatterplotData();
+  attributeRanges = {};
   updateButton();
 });
 d3.select("#update-btn").on("click", () => {
@@ -230,7 +226,6 @@ function resetAll() {
   updateDropdown();
   updateColor();
   updateButton();
-  updateScatterplotData();
 }
 
 // automataically update the attributes when the dropdown is changed
