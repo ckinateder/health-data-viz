@@ -79,6 +79,7 @@
   }
   .attribute-select {
     font-size: 12px;
+    width: 100%;
   }
   .buttons {
     display: flex;
