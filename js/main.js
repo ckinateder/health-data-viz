@@ -205,7 +205,6 @@ d3.select("#swap-btn").on("click", () => {
     attribute2: [],
     attribute1: [],
   };
-  updateChoroplethData();
   updateScatterplotData();
   updateButton();
 });
@@ -232,7 +231,6 @@ function resetAll() {
   updateColor();
   updateButton();
   updateScatterplotData();
-  updateChoroplethData();
 }
 
 // automataically update the attributes when the dropdown is changed
@@ -255,11 +253,13 @@ d3.select("#colorpicker-3").on("change", () => {
 
 d3.select("#histogram-1-bins").on("change", () => {
   histogram1.changeNumBins(d3.select("#histogram-1-bins").property("value"));
+  attributeRanges = {};
   histogram1.updateVis();
 });
 
 d3.select("#histogram-2-bins").on("change", () => {
   histogram2.changeNumBins(d3.select("#histogram-2-bins").property("value"));
+  attributeRanges = {};
   histogram2.updateVis();
 });
 

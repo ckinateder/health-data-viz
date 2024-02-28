@@ -30,3 +30,42 @@ const inRange = (value, range) => {
     (value <= range[0] && value >= range[1])
   );
 };
+
+const checkRange = (object) => {
+  let coordinate = [
+    object.properties[attributeLabels[0]],
+    object.properties[attributeLabels[1]],
+  ];
+
+  if (
+    attributeRanges[attributeLabels[0]] === undefined &&
+    attributeRanges[attributeLabels[1]] === undefined
+  ) {
+    return false;
+  }
+
+  if (attributeRanges[attributeLabels[0]] === undefined) {
+    attributeRanges[attributeLabels[0]] = [];
+  }
+  if (attributeRanges[attributeLabels[1]] === undefined) {
+    attributeRanges[attributeLabels[1]] = [];
+  }
+
+  if (attributeRanges[attributeLabels[0]].length === 0) {
+    return inRange(coordinate[1], attributeRanges[attributeLabels[1]]);
+  } else if (attributeRanges[attributeLabels[1]].length === 0) {
+    return inRange(coordinate[0], attributeRanges[attributeLabels[0]]);
+  }
+
+  if (union) {
+    return (
+      inRange(coordinate[1], attributeRanges[attributeLabels[1]]) ||
+      inRange(coordinate[0], attributeRanges[attributeLabels[0]])
+    );
+  } else {
+    return (
+      inRange(coordinate[1], attributeRanges[attributeLabels[1]]) &&
+      inRange(coordinate[0], attributeRanges[attributeLabels[0]])
+    );
+  }
+};

@@ -136,7 +136,7 @@ class ChoroplethMap {
           d.properties[attributeLabels[0]] !== undefined &&
           d.properties[attributeLabels[0]] !== -1
         ) {
-          if (this.checkRange(d)) {
+          if (checkRange(d)) {
             return accentColor;
           } else {
             return vis.colorScale(d.properties[attributeLabels[0]]);
@@ -184,7 +184,7 @@ class ChoroplethMap {
               d.properties[attributeLabels[0]] !== undefined &&
               d.properties[attributeLabels[0]] !== -1
             ) {
-              if (this.checkRange(d)) {
+              if (checkRange(d)) {
                 return accentColor;
               } else {
                 return vis.colorScale(d.properties[attributeLabels[0]]);
@@ -216,36 +216,5 @@ class ChoroplethMap {
 
   changeColorRange(colorRange) {
     colorRange = colorRange;
-  }
-
-  checkRange(object) {
-    let coordinate = [
-      object.properties[attributeLabels[0]],
-      object.properties[attributeLabels[1]],
-    ];
-    if (attributeRanges[attributeLabels[0]] === undefined) {
-      attributeRanges[attributeLabels[0]] = [];
-    }
-    if (attributeRanges[attributeLabels[1]] === undefined) {
-      attributeRanges[attributeLabels[1]] = [];
-    }
-
-    if (attributeRanges[attributeLabels[0]].length === 0) {
-      return inRange(coordinate[1], attributeRanges[attributeLabels[1]]);
-    } else if (attributeRanges[attributeLabels[1]].length === 0) {
-      return inRange(coordinate[0], attributeRanges[attributeLabels[0]]);
-    }
-
-    if (union) {
-      return (
-        inRange(coordinate[1], attributeRanges[attributeLabels[1]]) ||
-        inRange(coordinate[0], attributeRanges[attributeLabels[0]])
-      );
-    } else {
-      return (
-        inRange(coordinate[1], attributeRanges[attributeLabels[1]]) &&
-        inRange(coordinate[0], attributeRanges[attributeLabels[0]])
-      );
-    }
   }
 }

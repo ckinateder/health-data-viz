@@ -233,8 +233,7 @@ class Histogram {
   changeNumBins(numBins) {
     this.config.numBins = numBins;
     attributeRanges[this.attributeLabel] = []; // reset the attributeRanges
-    updateChoroplethData();
-    updateScatterplotData();
+    histogramBrushUpdate();
   }
   setExpression(expression) {
     this.expression = expression;

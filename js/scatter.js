@@ -137,7 +137,7 @@ class ScatterPlot {
       .transition()
       .duration(onTransitionDuration)
       .attr("fill", (d) => {
-        if (this.checkRange(d)) {
+        if (checkRange(d)) {
           return accentColor;
         } else {
           return vis.midColor;
@@ -188,7 +188,7 @@ class ScatterPlot {
           .duration(offTransitionDuration)
           .attr("r", 2)
           .attr("fill", (d) => {
-            if (this.checkRange(d)) {
+            if (checkRange(d)) {
               return accentColor;
             } else {
               return vis.midColor;
@@ -267,35 +267,5 @@ class ScatterPlot {
 
   changeColorRange(colorRange) {
     colorRange = colorRange;
-  }
-  checkRange(object) {
-    let coordinate = [
-      object.properties[attributeLabels[0]],
-      object.properties[attributeLabels[1]],
-    ];
-    if (attributeRanges[attributeLabels[0]] === undefined) {
-      attributeRanges[attributeLabels[0]] = [];
-    }
-    if (attributeRanges[attributeLabels[1]] === undefined) {
-      attributeRanges[attributeLabels[1]] = [];
-    }
-
-    if (attributeRanges[attributeLabels[0]].length === 0) {
-      return inRange(coordinate[1], attributeRanges[attributeLabels[1]]);
-    } else if (attributeRanges[attributeLabels[1]].length === 0) {
-      return inRange(coordinate[0], attributeRanges[attributeLabels[0]]);
-    }
-
-    if (union) {
-      return (
-        inRange(coordinate[1], attributeRanges[attributeLabels[1]]) ||
-        inRange(coordinate[0], attributeRanges[attributeLabels[0]])
-      );
-    } else {
-      return (
-        inRange(coordinate[1], attributeRanges[attributeLabels[1]]) &&
-        inRange(coordinate[0], attributeRanges[attributeLabels[0]])
-      );
-    }
   }
 }
