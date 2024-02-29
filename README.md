@@ -52,4 +52,6 @@ There are lots of conclusions that can be made from this application. One intere
 
 ## Link to Demo Video
 
-Link demo here.
+Click the image below to watch a video of the application in action.
+
+[![video](img/brush-sc.png)](https://youtu.be/8LH60IVl_u0)

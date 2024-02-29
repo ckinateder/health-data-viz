@@ -130,8 +130,8 @@ Promise.all([
     defaultColorRange = ["#00BEFF", "#571846"];
     defaultHistogramBins = 40;
     defaultAccentColor = "#ff9b00";
-    defaultWidth = 650;
-    defaultHeight = 400;
+    defaultWidth = 800;
+    defaultHeight = 500;
     defaultLiveBrushing = false;
     defaultDotSize = 2;
 
